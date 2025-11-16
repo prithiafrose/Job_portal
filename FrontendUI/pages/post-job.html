@@ -8,7 +8,7 @@
 </head>
 <body>
   <div class="job-adding-container">
-    <div >
+    <div>
       <img src="../assets/hire.jpg" alt="">
     </div>
 
@@ -80,6 +80,8 @@
     </div>
   </div>
 
-  <script src="script.js"></script>
+  <!-- Make sure utils.js loads before jobs-add.js -->
+  <script src="../js/utils.js" defer></script>
+  <script src="../js/jobs-add.js" defer></script>
 </body>
 </html>

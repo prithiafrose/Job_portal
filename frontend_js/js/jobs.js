@@ -1,75 +1,42 @@
-document.addEventListener('DOMContentLoaded', async () => {
-  const params = new URLSearchParams(location.search);
-  const q = params.get('q') || '';
-  const page = Number(params.get('page') || 1);
-  const limit = Number(params.get('limit') || 10);
-  const typeParam = params.get('type') || '';
-  const locationParam = params.get('location') || '';
+// jobs.js
+document.addEventListener("DOMContentLoaded", async () => {
+  const jobsList = document.getElementById("jobs-list");
+  if (!jobsList) return;
 
-  const qEl = document.getElementById('q');
-  const typeEl = document.getElementById('type');
-  const locationEl = document.getElementById('location');
+  const fetchJobs = async () => {
+    const params = new URLSearchParams();
+    const q = document.getElementById("q")?.value;
+    const type = document.getElementById("type")?.value;
+    const location = document.getElementById("location")?.value;
 
-  if (qEl) qEl.value = q;
-  if (typeEl) typeEl.value = typeParam;
-  if (locationEl) locationEl.value = locationParam;
+    if (q) params.append("q", q);
+    if (type) params.append("type", type);
+    if (location) params.append("location", location);
 
-  document.getElementById('list-filter')?.addEventListener('submit', (ev) => {
-    ev.preventDefault();
-    const query = qEl.value;
-    const type = typeEl.value;
-    const location = locationEl.value;
-    const url = new URL(location.href);
-    url.searchParams.set('q', query || '');
-    if (type) url.searchParams.set('type', type); else url.searchParams.delete('type');
-    if (location) url.searchParams.set('location', location); else url.searchParams.delete('location');
-    url.searchParams.set('page', '1');
-    location.href = url.toString();
-  });
+    try {
+      const res = await fetch(API_BASE + "/jobs?" + params.toString());
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Failed to fetch jobs");
 
-  async function load(pageNum = 1) {
-    const url = new URL(API_BASE + '/jobs');
-    url.searchParams.set('q', q);
-    url.searchParams.set('page', pageNum);
-    url.searchParams.set('limit', limit);
-    if (typeParam) url.searchParams.set('type', typeParam);
-    if (locationParam) url.searchParams.set('location', locationParam);
-
-    const res = await fetch(url.toString());
-    const body = await res.json();
-    const list = document.getElementById('jobs-list');
-    list.innerHTML = '';
-    body.jobs.forEach(job => {
-      const item = document.createElement('div');
-      item.className = 'job-item';
-      item.innerHTML = `
-        <div class="left">
-          <a href="job-details.html?id=${job.id}"><strong>${escapeHTML(job.title)}</strong></a>
-          <div class="meta">${escapeHTML(job.company)} • ${escapeHTML(job.location||'')}</div>
+      jobsList.innerHTML = data.jobs.map(job => `
+        <div class="job-card">
+          <h3>${escapeHTML(job.title)}</h3>
+          <p>${escapeHTML(job.company)} - ${escapeHTML(job.location)}</p>
+          <p>${escapeHTML(job.type)} | $${job.salary}</p>
+          <a href="job-details.html?id=${job._id}">View Details</a>
         </div>
-        <div class="right">
-          <a href="job-details.html?id=${job.id}">View</a>
-        </div>
-      `;
-      list.appendChild(item);
-    });
+      `).join("");
 
-    const pagination = document.getElementById('pagination');
-    pagination.innerHTML = '';
-    const totalPages = Math.ceil(body.total / limit) || 1;
-    for (let p = 1; p <= totalPages; p++) {
-      const btn = document.createElement('button');
-      btn.textContent = p;
-      if (p === pageNum) btn.disabled = true;
-      btn.addEventListener('click', () => {
-        const urlp = new URL(location.href);
-        urlp.searchParams.set('page', p);
-        location.href = urlp.toString();
-      });
-      pagination.appendChild(btn);
-      if (p >= 10) break;
+    } catch (err) {
+      jobsList.innerHTML = `<p style="color:red">${err.message}</p>`;
     }
-  }
+  };
 
-  load(page);
+  fetchJobs();
+
+  const filterForm = document.getElementById("list-filter");
+  if (filterForm) filterForm.addEventListener("submit", (e) => {
+    e.preventDefault();
+    fetchJobs();
+  });
 });

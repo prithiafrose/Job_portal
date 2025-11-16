@@ -1,51 +1,90 @@
-document.addEventListener('DOMContentLoaded', () => {
-  const loginForm = document.getElementById('login-form');
-  const registerForm = document.getElementById('register-form');
-  const msg = document.getElementById('auth-msg');
+// auth.js
+document.addEventListener("DOMContentLoaded", () => {
 
-  if (loginForm) loginForm.addEventListener('submit', async (ev) => {
-    ev.preventDefault();
-    const data = Object.fromEntries(new FormData(loginForm).entries());
-    try {
-      const res = await fetch(API_BASE + '/auth/login', {
-        method: 'POST',
-        headers: {'Content-Type':'application/json'},
-        body: JSON.stringify(data)
-      });
-      const body = await res.json();
-      if (body.error) {
-        msg.innerText = body.error;
-      } else {
-        localStorage.setItem('token', body.token);
-        localStorage.setItem('user', JSON.stringify(body.user));
-        msg.innerText = 'Login successful';
-        setTimeout(()=>location.href = '/index.html', 600);
-      }
-    } catch (err) {
-      msg.innerText = 'Login failed';
-    }
-  });
+  // ===== Show/Hide Login Password =====
+  const showLoginPass = document.getElementById("showLoginPassword");
+  if (showLoginPass) {
+    showLoginPass.addEventListener("change", () => {
+      const pass = document.getElementById("loginPassword");
+      pass.type = showLoginPass.checked ? "text" : "password";
+    });
+  }
 
-  if (registerForm) registerForm.addEventListener('submit', async (ev) => {
-    ev.preventDefault();
-    const data = Object.fromEntries(new FormData(registerForm).entries());
-    try {
-      const res = await fetch(API_BASE + '/auth/register', {
-        method: 'POST',
-        headers: {'Content-Type':'application/json'},
-        body: JSON.stringify(data)
-      });
-      const body = await res.json();
-      if (body.error) {
-        msg.innerText = body.error;
-      } else {
-        localStorage.setItem('token', body.token);
-        localStorage.setItem('user', JSON.stringify(body.user));
-        msg.innerText = 'Account created';
-        setTimeout(()=>location.href = '/index.html', 600);
+  // ===== Login Form =====
+  const loginForm = document.getElementById("loginSubmit");
+  if (loginForm) {
+    loginForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const error = document.getElementById("loginError");
+      error.style.color = "red";
+      error.textContent = "Loading...";
+
+      const formData = {
+        email: loginForm.email.value,
+        password: loginForm.password.value
+      };
+
+      try {
+        const res = await fetch(API_BASE + "/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(formData)
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || "Login failed");
+
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("user", JSON.stringify(data.user));
+
+        error.style.color = "green";
+        error.textContent = "Login successful!";
+        setTimeout(() => window.location.href = "../index.html", 800);
+      } catch (err) {
+        error.textContent = err.message;
       }
-    } catch (err) {
-      msg.innerText = 'Registration failed';
-    }
-  });
+    });
+  }
+
+  // ===== Show/Hide Register Password =====
+  const showRegisterPass = document.getElementById("showRegisterPassword");
+  if (showRegisterPass) {
+    showRegisterPass.addEventListener("change", () => {
+      const pass = document.getElementById("registerPassword");
+      pass.type = showRegisterPass.checked ? "text" : "password";
+    });
+  }
+
+  // ===== Register Form =====
+  const registerForm = document.getElementById("registerSubmit");
+  if (registerForm) {
+    registerForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const error = document.getElementById("registerError");
+      error.textContent = "Loading...";
+      error.style.color = "red";
+
+      const formData = {
+        username: registerForm.username.value,
+        email: registerForm.email.value,
+        mobile: registerForm.mobile.value,
+        password: registerForm.password.value
+      };
+
+      try {
+        const res = await fetch(API_BASE + "/register", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(formData)
+        });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || "Registration failed");
+
+        error.style.color = "green";
+        error.textContent = "Registration successful!";
+        setTimeout(() => window.location.href = "login.html", 900);
+      } catch (err) {
+        error.textContent = err.message;
+      }
+    });
+  }
 });
