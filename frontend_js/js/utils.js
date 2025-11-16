@@ -1,16 +1,29 @@
-// global utilities
-const API_BASE = (function(){
-  // By default assume backend at same host + /api
+// utils.js
+
+// API base URL
+const API_BASE = (function () {
   return window.API_BASE || (location.origin.includes('file:') ? 'http://localhost:5000/api' : location.origin + '/api');
 })();
 
+// Escape HTML to prevent XSS
+function escapeHTML(str = '') {
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
+// Set auth UI (login/logout nav links)
 function setAuthUI() {
   const link = document.getElementById('auth-link');
-  const token = localStorage.getItem('token');
   if (!link) return;
+
+  const token = localStorage.getItem('token');
   if (token) {
     const userJson = localStorage.getItem('user');
-    const name = userJson ? JSON.parse(userJson).name : 'Account';
+    const name = userJson ? JSON.parse(userJson).username : 'Account';
     link.textContent = `Hi, ${name}`;
     link.href = '#';
     link.addEventListener('click', (e) => {
@@ -25,12 +38,6 @@ function setAuthUI() {
     link.textContent = 'Login';
     link.href = '/pages/login.html';
   }
-}
-
-function escapeHTML(s='') {
-  return String(s)
-    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;').replace(/'/g, '&#039;');
 }
 
 document.addEventListener('DOMContentLoaded', setAuthUI);
