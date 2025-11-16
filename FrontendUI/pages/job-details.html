@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Job Details - Job Portal</title>
+  <link rel="stylesheet" href="../css/style.css" />
+  <link rel="stylesheet" href="../css/header.css" />
+  <link rel="stylesheet" href="../css/components.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container header-inner">
+      <a href="../index.html" class="logo">JOBPORTAL</a>
+      <nav class="nav">
+        <a href="../pages/jobs.html">Jobs</a>
+        <a href="../pages/login.html" id="auth-link">Login</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container main">
+    <section class="section">
+      <div id="job-detail"></div>
+      <div id="apply-form-wrapper"></div>
+    </section>
+  </main>
+
+  <script src="../js/utils.js"></script>
+  <script>
+    (async function () {
+      const params = new URLSearchParams(location.search);
+      const id = params.get('id');
+      if (!id) {
+        document.getElementById('job-detail').innerText = 'Job id missing';
+        return;
+      }
+      try {
+        const res = await fetch(API_BASE + '/jobs/' + id);
+        const { job } = await res.json();
+        const el = document.getElementById('job-detail');
+        el.innerHTML = `
+          <h1>${escapeHTML(job.title)}</h1>
+          <div class="meta">${escapeHTML(job.company)} • ${escapeHTML(job.location || '')} • ${escapeHTML(job.type || '')}</div>
+          <p class="salary">${escapeHTML(job.salary || '')}</p>
+          <div class="description">${escapeHTML(job.description || '').replace(/\n/g, '<br/>')}</div>
+        `;
+
+        const token = localStorage.getItem('token');
+        const wrapper = document.getElementById('apply-form-wrapper');
+        if (token) {
+          wrapper.innerHTML = `
+            <h3>Apply for this job</h3>
+            <form id="apply-form" enctype="multipart/form-data">
+              <label>Cover letter</label><br/>
+              <textarea name="cover_letter" rows="5"></textarea><br/>
+              <label>Resume (PDF)</label><br/>
+              <input type="file" name="resume" accept=".pdf,.doc,.docx" /><br/>
+              <button type="submit">Submit Application</button>
+            </form>
+            <div id="apply-msg"></div>
+          `;
+          document.getElementById('apply-form').addEventListener('submit', async (ev) => {
+            ev.preventDefault();
+            const form = ev.currentTarget;
+            const fd = new FormData(form);
+            fd.append('job_id', id);
+            const res = await fetch(API_BASE + '/applications', {
+              method: 'POST',
+              headers: { Authorization: 'Bearer ' + token },
+              body: fd
+            });
+            const data = await res.json();
+            document.getElementById('apply-msg').innerText = data.error || 'Application submitted';
+          });
+        } else {
+          wrapper.innerHTML = `<p><a href="login.html">Login</a> to apply</p>`;
+        }
+      } catch (err) {
+        document.getElementById('job-detail').innerText = 'Error loading job';
+      }
+    })();
+  </script>
+</body>
+</html>
