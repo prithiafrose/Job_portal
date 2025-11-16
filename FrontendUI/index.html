@@ -1,17 +1,16 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Job Portal - Home</title>
-  <link rel="stylesheet" href="css/style.css" />
-  <link rel="stylesheet" href="css/header.css" />
-  <link rel="stylesheet" href="css/components.css" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Job Portal</title>
+<link rel="stylesheet" href="../FrontendUI/css/index.css">
 </head>
 <body>
-  <header class="site-header">
+
+ <header class="site-header">
     <div class="container header-inner">
-      <a href="index.html" class="logo">JOBPORTAL</a>
+      <a href="index.html" class="logo"><span id="hire">Hire</span>Way</a>
       <nav class="nav">
         <a href="pages/jobs.html">Jobs</a>
         <a href="pages/post-job.html">Post Job</a>
@@ -20,24 +19,20 @@
     </div>
   </header>
 
-  <main class="container main">
-    <section class="hero">
-      <h1>Find your next opportunity</h1>
-      <p>Search jobs by title, company, location, or type.</p>
-      <form id="search-form" class="search-form">
-        <input id="search-query" placeholder="Job title, company, or keywords" />
-        <button type="submit">Search</button>
-      </form>
-    </section>
 
-    <section id="featured" class="section">
-      <h2>Featured Jobs</h2>
-      <div id="jobs-list" class="jobs-grid"></div>
-      <div><a href="pages/jobs.html">See all jobs →</a></div>
-    </section>
-  </main>
+<div class="filter-container">
+  <input type="text" id="jobTitle" placeholder="Job Title">
+  <input type="text" id="location" placeholder="Location">
+  <input type="text" id="skills" placeholder="Skills (comma separated)">
+  <input type="number" id="minSalary" placeholder="Min Salary">
+  <input type="number" id="maxSalary" placeholder="Max Salary">
+  <button id="applyFilters">Apply Filters</button>
+  <button id="clearFilters">Clear</button>
+</div>
 
-  <script src="js/utils.js"></script>
-  <script src="js/main.js"></script>
+<div id="job-list" class="job-list"></div>
+<div id="pagination" class="pagination-container"></div>
+
+<script src="index.js"></script>
 </body>
 </html>

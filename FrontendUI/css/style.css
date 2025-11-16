@@ -13,7 +13,7 @@ body{font-family:Inter, system-ui, Arial, sans-serif;background:var(--bg);color:
 
 .site-header{background:linear-gradient(90deg,#fff,#f8f8f8);border-bottom:1px solid #eee}
 .header-inner{display:flex;align-items:center;justify-content:space-between;padding:12px 16px}
-.logo{font-weight:700;color:var(--accent);text-decoration:none}
+.logo{font-weight:900;color:rgb(193, 74, 53);text-decoration:none}
 .nav a{margin-left:12px;color:var(--muted);text-decoration:none}
 .main{padding:28px 16px}
 

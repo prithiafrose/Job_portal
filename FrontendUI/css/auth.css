@@ -1,0 +1,115 @@
+:root{
+  --bg:#fbfbfb;
+  --card:#ffffff;
+  --text:#222;
+  --muted:#666;
+  --accent:#0b74de;
+  --container:1100px;
+}
+.main{padding:28px 16px}
+body{font-family:Inter, system-ui, Arial, sans-serif;background:var(--bg);color:var(--text);margin:0;line-height:1.45}
+.container{max-width:var(--container);margin:0 auto;padding:16px}
+
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "Poppins", sans-serif;
+  background: #f5f7fa;
+}
+
+.auth-container {
+  width: 380px;
+  margin: 80px auto;
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+  text-align: center;
+  margin-bottom: 25px;
+  font-weight: 600;
+  color: #333;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 6px;
+  color: #555;
+  font-size: 14px;
+}
+.site-header{background:linear-gradient(90deg,#fff,#f8f8f8);border-bottom:1px solid #eee}
+.header-inner{display:flex;align-items:center;justify-content:space-between;padding:12px 16px}
+
+.nav a{margin-left:12px;color:var(--muted);text-decoration:none}
+.logo{font-weight:900;color:rgb(193, 74, 53);text-decoration:none}
+
+
+.form-group input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 15px;
+}
+
+button {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  background: #4a90e2;
+  border: none;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.3s;
+  margin-top: 10px;
+}
+
+button:hover {
+  background: #2d78c9;
+}
+
+.show-password {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 14px;
+  margin-top: 5px;
+}
+
+.error {
+  color: red;
+  font-size: 14px;
+  padding: 5px 0;
+  text-align: center;
+}
+
+.success {
+  color: green;
+  font-size: 14px;
+  padding: 5px 0;
+  text-align: center;
+}
+
+.redirect-text {
+  text-align: center;
+  margin-top: 15px;
+  font-size: 14px;
+}
+
+.redirect-text a {
+  color: #4a90e2;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.redirect-text a:hover {
+  text-decoration: underline;
+}
