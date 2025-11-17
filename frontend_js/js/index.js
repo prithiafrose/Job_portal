@@ -4,8 +4,10 @@ document.addEventListener("DOMContentLoaded", () => {
   const applyBtn = document.getElementById("applyFilters");
   const clearBtn = document.getElementById("clearFilters");
 
+  // Fetch jobs from backend with optional filters
   const fetchJobs = async () => {
     if (!jobList) return;
+
     const title = document.getElementById("jobTitle")?.value;
     const location = document.getElementById("location")?.value;
     const skills = document.getElementById("skills")?.value;
@@ -20,10 +22,12 @@ document.addEventListener("DOMContentLoaded", () => {
     if (maxSalary) params.append("maxSalary", maxSalary);
 
     try {
-      const res = await fetch(API_BASE + "/jobs?" + params.toString());
+      const res = await fetch(`${API_BASE}/jobs?${params.toString()}`);
       const data = await res.json();
+
       if (!res.ok) throw new Error(data.error || "Failed to fetch jobs");
 
+      // Render job cards
       jobList.innerHTML = data.jobs.map(job => `
         <div class="job-card">
           <h3>${escapeHTML(job.title)}</h3>
@@ -38,15 +42,18 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   };
 
+  // Apply filters button
   applyBtn?.addEventListener("click", fetchJobs);
+
+  // Clear filters button
   clearBtn?.addEventListener("click", () => {
-    document.getElementById("jobTitle").value = "";
-    document.getElementById("location").value = "";
-    document.getElementById("skills").value = "";
-    document.getElementById("minSalary").value = "";
-    document.getElementById("maxSalary").value = "";
+    ["jobTitle","location","skills","minSalary","maxSalary"].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.value = "";
+    });
     fetchJobs();
   });
 
+  // Initial fetch
   fetchJobs();
 });

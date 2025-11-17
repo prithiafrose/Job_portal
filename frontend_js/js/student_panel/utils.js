@@ -1,9 +1,5 @@
-// utils.js
-
-// API base URL
-const API_BASE = (function () {
-  return window.API_BASE || (location.origin.includes('file:') ? 'http://localhost:5000/api' : location.origin + '/api');
-})();
+// ====================== API BASE URL ======================
+const API_BASE = "http://localhost:5000/api"; // Change if backend URL changes
 
 // Escape HTML to prevent XSS
 function escapeHTML(str = '') {
@@ -15,7 +11,7 @@ function escapeHTML(str = '') {
     .replace(/'/g, '&#039;');
 }
 
-// Set auth UI (login/logout nav links)
+// Auth UI (Login/Logout link)
 function setAuthUI() {
   const link = document.getElementById('auth-link');
   if (!link) return;
@@ -23,16 +19,10 @@ function setAuthUI() {
   const token = localStorage.getItem('token');
   if (token) {
     const userJson = localStorage.getItem('user');
-    const name = userJson ? escapeHTML(JSON.parse(userJson).username) : 'Account';
-
+    const name = userJson ? JSON.parse(userJson).username : 'Account';
     link.textContent = `Hi, ${name}`;
     link.href = '#';
-
-    // Remove old listeners and add logout
-    const newLink = link.cloneNode(true);
-    link.replaceWith(newLink);
-
-    newLink.addEventListener('click', (e) => {
+    link.addEventListener('click', (e) => {
       e.preventDefault();
       if (confirm('Logout?')) {
         localStorage.removeItem('token');
@@ -42,7 +32,7 @@ function setAuthUI() {
     });
   } else {
     link.textContent = 'Login';
-    link.href = '/Auth/login.html'; // adjust based on your folder structure
+    link.href = '../auth/login.html';
   }
 }
 

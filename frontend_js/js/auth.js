@@ -1,6 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
+
   // ==================== Backend Base URL ====================
-  const API_BASE = "http://localhost:5001/api/auth";  // ✅ Correct path
+  const API_BASE = "http://localhost:5001/api/auth";
 
   // ==================== Show/Hide Password ====================
   const togglePassword = (checkboxId, inputId) => {
@@ -47,9 +48,10 @@ document.addEventListener("DOMContentLoaded", () => {
         const data = await res.json();
         loading.textContent = "";
 
-        if (!res.ok) throw new Error(data.error || "Login failed");
+        if (!res.ok) {
+          throw new Error(data.error || `Login failed (status ${res.status})`);
+        }
 
-        // Save token & user info
         localStorage.setItem("token", data.token);
         localStorage.setItem("user", JSON.stringify(data.user));
 
@@ -57,7 +59,7 @@ document.addEventListener("DOMContentLoaded", () => {
         error.textContent = "Login successful! Redirecting...";
 
         setTimeout(() => {
-          window.location.href = "../index.html";
+          window.location.href = "../../Auth/login.html";
         }, 800);
 
       } catch (err) {
@@ -102,13 +104,15 @@ document.addEventListener("DOMContentLoaded", () => {
         const data = await res.json();
         loading.textContent = "";
 
-        if (!res.ok) throw new Error(data.error || "Registration failed");
+        if (!res.ok) {
+          throw new Error(data.error || `Registration failed (status ${res.status})`);
+        }
 
         error.style.color = "green";
         error.textContent = "Registration successful! Redirecting...";
 
         setTimeout(() => {
-          window.location.href = "login.html";
+          window.location.href = "../../Auth/Register.html";
         }, 900);
 
       } catch (err) {
@@ -118,5 +122,5 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
   }
-});
 
+});

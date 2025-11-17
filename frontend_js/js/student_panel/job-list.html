@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Job Listings</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <a href="dashboard.html">Dashboard</a>
+    <a href="job-list.html">Jobs</a>
+    <a href="applied-jobs.html">Applied Jobs</a>
+    <a href="profile.html">Profile</a>
+  </div>
+
+  <!-- Main content -->
+  <div class="main-content">
+    <h1>Available Jobs</h1>
+
+    <!-- Filters -->
+    <div class="card">
+      <h3>Filter Jobs</h3>
+      <input type="text" id="jobTitle" placeholder="Job Title">
+      <input type="text" id="location" placeholder="Location">
+      <input type="text" id="skills" placeholder="Skills">
+      <input type="number" id="minSalary" placeholder="Min Salary">
+      <input type="number" id="maxSalary" placeholder="Max Salary">
+      <button id="applyFilters" class="btn">Apply Filters</button>
+      <button id="clearFilters" class="btn">Clear Filters</button>
+    </div>
+
+    <!-- Job List -->
+    <div id="job-list"></div>
+  </div>
+
+  <script src="../js/utils.js"></script>
+  <script src="../js/main.js"></script>
+</body>
+</html>
