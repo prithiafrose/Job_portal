@@ -36,8 +36,8 @@ function renderJobs() {
     return titleMatch && locationMatch && skillsMatch && minSalaryMatch && maxSalaryMatch;
   });
 
-  jobListEl.innerHTML = filteredJobs.length === 0 
-    ? "<p>No jobs found</p>" 
+  jobListEl.innerHTML = filteredJobs.length === 0
+    ? "<p>No jobs found</p>"
     : filteredJobs.map(job => `
       <div class="job-card">
         <img src="${job.logo_url}" alt="logo">
