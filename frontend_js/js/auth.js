@@ -1,8 +1,5 @@
 // auth.js
 document.addEventListener("DOMContentLoaded", () => {
-  // ==================== Backend Base URL ====================
-  const API_BASE = "http://localhost:5000/api"; // Change to your backend URL if needed
-
   // ==================== Show/Hide Password ====================
   const togglePassword = (checkboxId, inputId) => {
     const checkbox = document.getElementById(checkboxId);
@@ -33,15 +30,23 @@ document.addEventListener("DOMContentLoaded", () => {
       };
 
       try {
-        const res = await fetch(`${API_BASE}/login`, {
+        const res = await fetch(`${API_BASE}/auth/login`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(formData)
         });
-        const data = await res.json();
+
+        // Safely parse JSON
+        let data;
+        try {
+          data = await res.json();
+        } catch {
+          data = {};
+        }
+
         loading.textContent = "";
 
-        if (!res.ok) throw new Error(data.error || "Login failed");
+        if (!res.ok) throw new Error(data.error || `Login failed (status ${res.status})`);
 
         // Save token and user info
         localStorage.setItem("token", data.token);
@@ -50,7 +55,7 @@ document.addEventListener("DOMContentLoaded", () => {
         error.style.color = "green";
         error.textContent = "Login successful! Redirecting...";
         setTimeout(() => {
-          window.location.href = "../index.html";
+          window.location.href = "../../Auth/login.html";
         }, 800);
       } catch (err) {
         loading.textContent = "";
@@ -77,25 +82,32 @@ document.addEventListener("DOMContentLoaded", () => {
         email: registerForm.email.value,
         mobile: registerForm.mobile.value,
         password: registerForm.password.value,
-          role: registerForm.role ? registerForm.role.value : "candidate" // include role
-
+        role: registerForm.role ? registerForm.role.value : "candidate"
       };
 
       try {
-        const res = await fetch(`${API_BASE}/register`, {
+        const res = await fetch(`${API_BASE}/auth/register`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(formData)
         });
-        const data = await res.json();
+
+        // Safely parse JSON
+        let data;
+        try {
+          data = await res.json();
+        } catch {
+          data = {};
+        }
+
         loading.textContent = "";
 
-        if (!res.ok) throw new Error(data.error || "Registration failed");
+        if (!res.ok) throw new Error(data.error || `Registration failed (status ${res.status})`);
 
         error.style.color = "green";
         error.textContent = "Registration successful! Redirecting to login...";
         setTimeout(() => {
-          window.location.href = "login.html";
+           window.location.href = "../../Auth/Register.html";
         }, 900);
       } catch (err) {
         loading.textContent = "";
