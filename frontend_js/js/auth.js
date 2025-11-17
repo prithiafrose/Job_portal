@@ -1,23 +1,31 @@
 // auth.js
 document.addEventListener("DOMContentLoaded", () => {
+  // ==================== Backend Base URL ====================
+  const API_BASE = "http://localhost:5000/api"; // Change to your backend URL if needed
 
-  // ===== Show/Hide Login Password =====
-  const showLoginPass = document.getElementById("showLoginPassword");
-  if (showLoginPass) {
-    showLoginPass.addEventListener("change", () => {
-      const pass = document.getElementById("loginPassword");
-      pass.type = showLoginPass.checked ? "text" : "password";
-    });
-  }
+  // ==================== Show/Hide Password ====================
+  const togglePassword = (checkboxId, inputId) => {
+    const checkbox = document.getElementById(checkboxId);
+    if (checkbox) {
+      checkbox.addEventListener("change", () => {
+        const input = document.getElementById(inputId);
+        input.type = checkbox.checked ? "text" : "password";
+      });
+    }
+  };
+  togglePassword("showLoginPassword", "loginPassword");
+  togglePassword("showRegisterPassword", "registerPassword");
 
-  // ===== Login Form =====
+  // ==================== LOGIN FORM ====================
   const loginForm = document.getElementById("loginSubmit");
   if (loginForm) {
     loginForm.addEventListener("submit", async (e) => {
       e.preventDefault();
       const error = document.getElementById("loginError");
-      error.style.color = "red";
-      error.textContent = "Loading...";
+      const loading = document.getElementById("loginLoading");
+
+      error.textContent = "";
+      loading.textContent = "Loading...";
 
       const formData = {
         email: loginForm.email.value,
@@ -25,64 +33,73 @@ document.addEventListener("DOMContentLoaded", () => {
       };
 
       try {
-        const res = await fetch(API_BASE + "/login", {
+        const res = await fetch(`${API_BASE}/login`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(formData)
         });
         const data = await res.json();
+        loading.textContent = "";
+
         if (!res.ok) throw new Error(data.error || "Login failed");
 
+        // Save token and user info
         localStorage.setItem("token", data.token);
         localStorage.setItem("user", JSON.stringify(data.user));
 
         error.style.color = "green";
-        error.textContent = "Login successful!";
-        setTimeout(() => window.location.href = "../index.html", 800);
+        error.textContent = "Login successful! Redirecting...";
+        setTimeout(() => {
+          window.location.href = "../index.html";
+        }, 800);
       } catch (err) {
+        loading.textContent = "";
+        error.style.color = "red";
         error.textContent = err.message;
       }
     });
   }
 
-  // ===== Show/Hide Register Password =====
-  const showRegisterPass = document.getElementById("showRegisterPassword");
-  if (showRegisterPass) {
-    showRegisterPass.addEventListener("change", () => {
-      const pass = document.getElementById("registerPassword");
-      pass.type = showRegisterPass.checked ? "text" : "password";
-    });
-  }
-
-  // ===== Register Form =====
+  // ==================== REGISTER FORM ====================
   const registerForm = document.getElementById("registerSubmit");
   if (registerForm) {
     registerForm.addEventListener("submit", async (e) => {
       e.preventDefault();
       const error = document.getElementById("registerError");
-      error.textContent = "Loading...";
+      const loading = document.getElementById("registerLoading");
+
+      error.textContent = "";
+      loading.textContent = "Loading...";
       error.style.color = "red";
 
       const formData = {
         username: registerForm.username.value,
         email: registerForm.email.value,
         mobile: registerForm.mobile.value,
-        password: registerForm.password.value
+        password: registerForm.password.value,
+          role: registerForm.role ? registerForm.role.value : "candidate" // include role
+
       };
 
       try {
-        const res = await fetch(API_BASE + "/register", {
+        const res = await fetch(`${API_BASE}/register`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(formData)
         });
         const data = await res.json();
+        loading.textContent = "";
+
         if (!res.ok) throw new Error(data.error || "Registration failed");
 
         error.style.color = "green";
-        error.textContent = "Registration successful!";
-        setTimeout(() => window.location.href = "login.html", 900);
+        error.textContent = "Registration successful! Redirecting to login...";
+        setTimeout(() => {
+          window.location.href = "login.html";
+        }, 900);
       } catch (err) {
+        loading.textContent = "";
+        error.style.color = "red";
         error.textContent = err.message;
       }
     });
