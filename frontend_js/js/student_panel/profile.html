@@ -6,12 +6,13 @@
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <!-- Profile Photo Section -->
-<div class="profile-photo">
-  <img id="profileImage" src="default-avatar.png" alt="Profile Photo">
-  <input type="file" id="uploadPhoto" accept="image/*">
-</div>
 
+  <!-- Profile Photo Section -->
+  <div class="profile-photo">
+    <img id="profileImage" src="picture/programmer.png" alt="Profile Photo"
+         style="width:150px; height:150px; border-radius:50%; object-fit:cover;">
+    <input type="file" id="uploadPhoto" accept="image/*">
+  </div>
 
   <!-- Sidebar -->
   <div class="sidebar">
@@ -27,18 +28,14 @@
 
     <div class="card">
       <h3>Personal Information</h3>
-      <input type="text" placeholder="Full Name" value="Israt Jahan Chadni">
-      <input type="email" placeholder="Email" value="ichadni113@gmail.com">
-      <input type="text" placeholder="Phone" value="+8801768065743">
-      <button class="btn">Update Profile</button>
+      <input type="text" placeholder="Full Name">
+      <input type="email" placeholder="Email">
+      <input type="text" placeholder="Phone">
+      <input type="text" placeholder="Skills">
+      <button class="btn" id="updateProfileBtn">Update Profile</button>
     </div>
+  </div>c
 
-    <div class="card">
-      <h3>Skills</h3>
-      <input type="text" placeholder="Skills" value="HTML, CSS, JS">
-      <button class="btn">Update Skills</button>
-    </div>
-  </div>
-
+  <script src="profile.js"></script>
 </body>
 </html>
