@@ -1,26 +1,31 @@
-// auth.js
 document.addEventListener("DOMContentLoaded", () => {
   // ==================== Backend Base URL ====================
-  const API_BASE = "http://localhost:5000"; // Change to your backend URL if needed
+  const API_BASE = "http://localhost:5000/api"; // Change to your backend URL if needed
 
   // ==================== Show/Hide Password ====================
   const togglePassword = (checkboxId, inputId) => {
     const checkbox = document.getElementById(checkboxId);
-    if (checkbox) {
+    const input = document.getElementById(inputId);
+
+    if (checkbox && input) {
       checkbox.addEventListener("change", () => {
-        const input = document.getElementById(inputId);
         input.type = checkbox.checked ? "text" : "password";
       });
     }
   };
+
   togglePassword("showLoginPassword", "loginPassword");
   togglePassword("showRegisterPassword", "registerPassword");
 
-  // ==================== LOGIN FORM ====================
+  // ===========================================================
+  // ==================== LOGIN FORM ===========================
+  // ===========================================================
   const loginForm = document.getElementById("loginSubmit");
+
   if (loginForm) {
     loginForm.addEventListener("submit", async (e) => {
       e.preventDefault();
+
       const error = document.getElementById("loginError");
       const loading = document.getElementById("loginLoading");
 
@@ -28,8 +33,8 @@ document.addEventListener("DOMContentLoaded", () => {
       loading.textContent = "Loading...";
 
       const formData = {
-        email: loginForm.email.value,
-        password: loginForm.password.value
+        email: loginForm.email.value.trim(),
+        password: loginForm.password.value.trim()
       };
 
       try {
@@ -38,20 +43,23 @@ document.addEventListener("DOMContentLoaded", () => {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(formData)
         });
+
         const data = await res.json();
         loading.textContent = "";
 
         if (!res.ok) throw new Error(data.error || "Login failed");
 
-        // Save token and user info
+        // Save token & user info
         localStorage.setItem("token", data.token);
         localStorage.setItem("user", JSON.stringify(data.user));
 
         error.style.color = "green";
         error.textContent = "Login successful! Redirecting...";
+
         setTimeout(() => {
           window.location.href = "../index.html";
         }, 800);
+
       } catch (err) {
         loading.textContent = "";
         error.style.color = "red";
@@ -60,11 +68,15 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // ==================== REGISTER FORM ====================
+  // ===========================================================
+  // ==================== REGISTER FORM =========================
+  // ===========================================================
   const registerForm = document.getElementById("registerSubmit");
+
   if (registerForm) {
     registerForm.addEventListener("submit", async (e) => {
       e.preventDefault();
+
       const error = document.getElementById("registerError");
       const loading = document.getElementById("registerLoading");
 
@@ -77,7 +89,7 @@ document.addEventListener("DOMContentLoaded", () => {
         email: registerForm.email.value,
         mobile: registerForm.mobile.value,
         password: registerForm.password.value,
-          role: registerForm.role ? registerForm.role.value : "student" // include role
+          role: registerForm.role ? registerForm.role.value : "candidate" // include role
 
       };
 
@@ -87,16 +99,19 @@ document.addEventListener("DOMContentLoaded", () => {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(formData)
         });
+
         const data = await res.json();
         loading.textContent = "";
 
         if (!res.ok) throw new Error(data.error || "Registration failed");
 
         error.style.color = "green";
-        error.textContent = "Registration successful! Redirecting to login...";
+        error.textContent = "Registration successful! Redirecting...";
+
         setTimeout(() => {
           window.location.href = "login.html";
         }, 900);
+
       } catch (err) {
         loading.textContent = "";
         error.style.color = "red";

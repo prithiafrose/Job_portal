@@ -2,16 +2,19 @@ import express from 'express';
 import dotenv from 'dotenv';
 import sequelize from './config/database.js';
 import authRoutes from './routes/auth.js';
-import User from './models/User.js';
 
 dotenv.config();
-
 const app = express();
 
 app.use(express.json());
+app.use(cors({
+  origin: "http://127.0.0.1:5500",
+  credentials: true
+}));
 
-// Mount auth routes
-app.use('/api/auth', authRoutes);
+
+// Routes
+app.use("/api/auth", authRoutes);
 
 // Example route
 app.get('/', (req, res) => {
@@ -20,7 +23,6 @@ app.get('/', (req, res) => {
 
 // Start Server
 const PORT = process.env.PORT || 5000;
-
 
 sequelize.sync({ alter: true })
   .then(() => {
