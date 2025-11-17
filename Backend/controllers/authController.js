@@ -10,11 +10,11 @@ const tokenExpiry = process.env.TOKEN_EXPIRY || "7d";
 
 export const register = async (req, res) => {
   try {
-    const { name, email, password, role } = req.body;
-    if (!name || !email || !password)
+    const { username, email, mobile, password,role } = req.body;
+    if (!username || !email || !mobile||!password)
       return res
         .status(400)
-        .json({ error: "Name, email, and password required" });
+        .json({ error: "Name, email, mobile and password required" });
 
     const existing = await User.findOne({ where: { email } });
     if (existing)
@@ -23,21 +23,23 @@ export const register = async (req, res) => {
     const passwordHash = await bcrypt.hash(password, 10);
 
     const user = await User.create({
-      name,
+      username,
       email,
-      password: passwordHash,
-      role: role || "candidate",
+      mobile,
+        role: role || "candidate", // <--- role is set here
+
+      password: passwordHash
     });
 
     const token = jwt.sign(
-      { id: user.id, email: user.email, role: user.role },
+      { id: user.id, email: user.email,role: user.role },
       jwtSecret,
       { expiresIn: tokenExpiry }
     );
 
     res.json({
       token,
-      user: { id: user.id, name: user.name, email: user.email, role: user.role },
+      user: { id: user.id, username: user.username, email: user.email,mobile:user.mobile,role: user.role},
     });
   } catch (err) {
     console.error(err);
@@ -65,7 +67,7 @@ export const login = async (req, res) => {
 
     res.json({
       token,
-      user: { id: user.id, name: user.name, email: user.email, role: user.role },
+      user: { id: user.id, username: user.username, email: user.email, role: user.role },
     });
   } catch (err) {
     console.error(err);
