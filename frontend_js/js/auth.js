@@ -1,7 +1,7 @@
 // auth.js
 document.addEventListener("DOMContentLoaded", () => {
   // ==================== Backend Base URL ====================
-  const API_BASE = "http://localhost:5000/api"; // Change to your backend URL if needed
+  const API_BASE = "http://localhost:5000"; // Change to your backend URL if needed
 
   // ==================== Show/Hide Password ====================
   const togglePassword = (checkboxId, inputId) => {
@@ -77,7 +77,7 @@ document.addEventListener("DOMContentLoaded", () => {
         email: registerForm.email.value,
         mobile: registerForm.mobile.value,
         password: registerForm.password.value,
-          role: registerForm.role ? registerForm.role.value : "candidate" // include role
+          role: registerForm.role ? registerForm.role.value : "student" // include role
 
       };
 

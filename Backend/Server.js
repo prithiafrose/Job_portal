@@ -2,10 +2,12 @@ import express from 'express';
 import dotenv from 'dotenv';
 import sequelize from './config/database.js';
 import authRoutes from './routes/auth.js';
+import User from './models/User.js';
 
 dotenv.config();
 
 const app = express();
+
 app.use(express.json());
 
 // Mount auth routes
@@ -18,6 +20,7 @@ app.get('/', (req, res) => {
 
 // Start Server
 const PORT = process.env.PORT || 5000;
+
 
 sequelize.sync({ alter: true })
   .then(() => {

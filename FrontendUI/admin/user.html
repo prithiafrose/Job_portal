@@ -3,35 +3,81 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin - Users</title>
-  <link rel="stylesheet" href="users.css">
+  <title>Manage Users - Admin Panel</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header>
-    <h1>Admin Panel - Users</h1>
-  </header>
 
-  <main>
-    <input type="text" id="searchUser" placeholder="Search by name or email..." />
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <a href="dashboard.html">Dashboard</a>
+    <a href="users.html" class="active">Users</a>
+    <a href="jobs.html">Job Listings</a>
+    <a href="profile.html">Profile</a>
+  </div>
 
-    <table>
-      <thead>
-        <tr>
-          <th>#</th>
-          <th>Name</th>
-          <th>Email</th>
-          <th>Mobile</th>
-          <th>Role</th>
-          <th>Status</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody id="usersTableBody">
-        <!-- JS will populate rows -->
-      </tbody>
-    </table>
-  </main>
+  <!-- Main Content -->
+  <div class="main-content">
+    <h1>Users Management</h1>
 
-  <script src="js/users.js" defer></script>
+    <!-- Top Controls -->
+    <div class="card">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+        <h3>All Users</h3>
+        <button class="btn" onclick="alert('Add user form here')">+ Add New User</button>
+      </div>
+
+      <!-- Users Table -->
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Username</th>
+            <th>Email</th>
+            <th>Mobile</th>
+            <th>Role</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td>Admin</td>
+            <td>admin@jobportal.com</td>
+            <td>+880123456789</td>
+            <td>Admin</td>
+            <td>
+              <button class="btn" onclick="alert('Edit user')">Edit</button>
+              <button class="btn" style="background-color:#ff4d4d" onclick="alert('Delete user')">Delete</button>
+            </td>
+          </tr>
+          <tr>
+            <td>2</td>
+            <td>JohnDoe</td>
+            <td>john@example.com</td>
+            <td>+880987654321</td>
+            <td>Candidate</td>
+            <td>
+              <button class="btn" onclick="alert('Edit user')">Edit</button>
+              <button class="btn" style="background-color:#ff4d4d" onclick="alert('Delete user')">Delete</button>
+            </td>
+          </tr>
+          <tr>
+            <td>3</td>
+            <td>JaneSmith</td>
+            <td>jane@example.com</td>
+            <td>+880112233445</td>
+            <td>Employer</td>
+            <td>
+              <button class="btn" onclick="alert('Edit user')">Edit</button>
+              <button class="btn" style="background-color:#ff4d4d" onclick="alert('Delete user')">Delete</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
 </body>
 </html>
+
