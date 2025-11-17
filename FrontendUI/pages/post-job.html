@@ -11,9 +11,7 @@
     <div class="container header-inner">
       <a href="../index.html" class="logo">HireWay</a>
       <nav class="nav">
-                        
         <a href="../index.html">Home</a>
-
         <a href="jobs.html">Jobs</a>
         <a href="post-job.html">Post Job</a>
         <a href="login.html" id="auth-link" class="active">Login</a>
@@ -21,8 +19,9 @@
       </nav>
     </div>
   </header>
+
   <div class="job-adding-container">
-    <div >
+    <div>
       <img class="img1" src="../assets/hire.jpg" alt="">
     </div>
 
@@ -33,18 +32,22 @@
           <label class="form-label">Company Name</label>
           <input class="form-input" type="text" name="companyName" required>
         </div>
+
         <div class="input-container">
           <label class="form-label">Logo URL</label>
           <input class="form-input" type="text" name="logoUrl" required>
         </div>
+
         <div class="input-container">
           <label class="form-label">Job Position</label>
           <input class="form-input" type="text" name="jobPosition" required>
         </div>
+
         <div class="input-container">
           <label class="form-label">Monthly Salary</label>
           <input class="form-input" type="number" name="salary" required>
         </div>
+
         <div class="input-container">
           <label class="form-label">Job Type</label>
           <select class="form-select" name="jobType" required>
@@ -55,6 +58,7 @@
             <option value="Internship">Internship</option>
           </select>
         </div>
+
         <div class="input-container">
           <label class="form-label">Remote/Office</label>
           <select class="form-select" name="remote" required>
@@ -64,22 +68,27 @@
             <option value="Hybrid">Hybrid</option>
           </select>
         </div>
+
         <div class="input-container">
           <label class="form-label">Location</label>
           <input class="form-input" type="text" name="location" required>
         </div>
+
         <div class="input-container">
           <label class="form-label">Job Description</label>
           <textarea class="form-textarea" name="jobDescription" required></textarea>
         </div>
+
         <div class="input-container">
           <label class="form-label">About Company</label>
           <textarea class="form-textarea" name="aboutCompany" required></textarea>
         </div>
+
         <div class="input-container">
           <label class="form-label">Skills Required</label>
           <input class="form-input" type="text" name="skills" required>
         </div>
+
         <div class="input-container">
           <label class="form-label">Additional Information</label>
           <textarea class="form-textarea" name="information"></textarea>
@@ -94,6 +103,7 @@
     </div>
   </div>
 
-  <script src="script.js"></script>
+  <script src="../js/utils.js" defer></script>
+  <script src="../js/jobs-add.js" defer></script>
 </body>
 </html>
