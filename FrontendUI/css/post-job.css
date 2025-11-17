@@ -4,10 +4,20 @@
   box-sizing: border-box;
   font-family: Arial, sans-serif;
 }
+.main{padding:28px 16px}
+body{font-family:Inter, system-ui, Arial, sans-serif;background:var(--bg);color:var(--text);margin:0;line-height:1.45}
+.container{max-width:var(--container);margin:0 auto;padding:16px}
 
 body {
   background-color: #f1ebeb;
 }
+body{font-family:Inter, system-ui, Arial, sans-serif;background:var(--bg);color:var(--text);margin:0;line-height:1.45}
+.container{max-width:var(--container);margin:0 auto;padding:16px}
+.site-header{background:linear-gradient(90deg,#fff,#f8f8f8);border-bottom:1px solid #eee}
+.header-inner{display:flex;align-items:center;justify-content:space-between;padding:12px 16px}
+.logo{font-weight:900;color:rgb(193, 74, 53);text-decoration:none}
+.nav a{margin-left:12px;color:var(--muted);text-decoration:none}
+.main{padding:28px 16px}
 
 .job-adding-container {
   display: flex;
@@ -16,6 +26,10 @@ body {
   padding: 25px;
   min-height: 100vh;
   margin-left: 10px;
+}
+.img1{
+    width: 400px;
+    height: 1000px;
 }
 
 .job-image-section {
