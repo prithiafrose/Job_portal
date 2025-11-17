@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
       };
 
       try {
-        const res = await fetch("https://job-portal-server-witx.onrender.com/register", {
+        const res = await fetch(API_BASE + "/auth/register", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(formData)

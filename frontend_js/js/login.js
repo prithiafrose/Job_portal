@@ -25,7 +25,7 @@ document.addEventListener("DOMContentLoaded", () => {
       };
 
       try {
-        const res = await fetch("https://job-portal-server-witx.onrender.com/login", {
+        const res = await fetch(API_BASE + "/jobs/add", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(formData)
