@@ -1,44 +1,19 @@
-import express from "express";
-import Job from "../models/Job.js";
+import { DataTypes } from "sequelize";
+import sequelize from "../config/db.js";
 
-const router = express.Router();
-
-// 1️⃣ GET /jobs?page=1 - list jobs with pagination
-router.get("/", async (req, res) => {
-  try {
-    const page = parseInt(req.query.page) || 1;
-    const limit = 5;
-    const offset = (page - 1) * limit;
-
-    const { count, rows } = await Job.findAndCountAll({
-      limit,
-      offset,
-      order: [["id", "DESC"]],
-    });
-
-    res.json({
-      jobs: rows,
-      totalPages: Math.ceil(count / limit),
-    });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Server error" });
+const Job = sequelize.define("Job", {
+  job_position: { type: DataTypes.STRING, allowNull: false },
+  company_name: { type: DataTypes.STRING, allowNull: false },
+  monthly_salary: { type: DataTypes.INTEGER, allowNull: false },
+  location: { type: DataTypes.STRING, allowNull: false },
+  skills_required: { type: DataTypes.JSON, allowNull: false },
+  logo_url: { type: DataTypes.STRING },
+  // ADD THIS STATUS FIELD:
+  status: {
+    type: DataTypes.ENUM('pending', 'active', 'rejected', 'expired'),
+    defaultValue: 'pending'
   }
 });
 
-// 2️⃣ GET /jobs/:id - get single job details
-router.get("/:id", async (req, res) => {
-  try {
-    const job = await Job.findByPk(req.params.id);
-    if (!job) {
-      return res.status(404).json({ error: "Job not found" });
-    }
-    res.json(job);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Server error" });
-  }
-});
-
-export default router;
+export default Job;
 
