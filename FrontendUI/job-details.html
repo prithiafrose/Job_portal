@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Job Details</title>
+  <link rel="stylesheet" href="css/job-details.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="container header-inner">
+    <a href="admin/index.html" class="logo"><span id="hire">Hire</span>Way</a>
+    <nav class="nav">
+      <a href="../Auth/login.html" id="auth-link">Login</a>
+    </nav>
+  </div>
+</header>
+
+<div class="job-details-container">
+  <div id="loadingMessage">Loading job details...</div>
+  <div id="jobContent" style="display: none;">
+    <h2 id="jobPosition"></h2>
+    <p><strong>Company:</strong> <span id="companyName"></span></p>
+    <p><strong>Location:</strong> <span id="location"></span></p>
+    <p><strong>Salary:</strong> ₹<span id="salary"></span></p>
+    <p><strong>Skills Required:</strong> <span id="skills"></span></p>
+    <p><strong>Description:</strong></p>
+    <p id="description"></p>
+    <p><strong>Posted:</strong> <span id="postedDate"></span></p>
+
+    <button id="applyBtn">Apply Now</button>
+    <button id="backBtn" class="back-btn">← Back to Jobs</button>
+  </div>
+</div>
+
+<script src="js/job-details.js" defer></script>
+</body>
+</html>

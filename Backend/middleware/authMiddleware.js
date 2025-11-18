@@ -1,11 +1,11 @@
 // Backend/middleware/authMiddleware.js
-import jwt from "jsonwebtoken";
-import dotenv from "dotenv";
+const jwt = require("jsonwebtoken");
+const dotenv = require("dotenv");
 dotenv.config();
 
 const jwtSecret = process.env.JWT_SECRET || "change_this";
 
-export const authMiddleware = (req, res, next) => {
+const authMiddleware = (req, res, next) => {
   const authHeader = req.headers.authorization;
   if (!authHeader || !authHeader.startsWith("Bearer "))
     return res.status(401).json({ error: "Unauthorized" });
@@ -20,4 +20,4 @@ export const authMiddleware = (req, res, next) => {
   }
 };
 
-export default authMiddleware;
+module.exports = { authMiddleware };

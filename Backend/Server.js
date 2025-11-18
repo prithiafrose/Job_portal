@@ -1,21 +1,23 @@
 
 // Backend/index.js
-import express from "express";
-import cors from "cors";
-import dotenv from "dotenv";
-import authRoutes from "./routes/auth.js";
-import sequelize from "./config/db.js";
-import uploadRoutes from "./routes/upload.js";
-import Job from "./models/Job.js";
-import jobRoutes from "./routes/jobs.js";
-import recruiterRoutes from "./routes/recruiter.js";
-import path from "path";
+const express = require("express");
+const cors = require("cors");
+const dotenv = require("dotenv");
+const authRoutes = require("./routes/auth.js");
+const sequelize = require("./config/db.js");
+const uploadRoutes = require("./routes/upload.js");
+const Job = require("./models/Job.js");
+const jobRoutes = require("./routes/jobs.js");
+const recruiterRoutes = require("./routes/recruiter.js");
+const applicationsRoutes = require("./routes/applications.js");
+const paymentRoutes = require("./routes/payment.js");
+const path = require("path");
 
 
 
 
 dotenv.config();
-const app = express();g
+const app = express();
 
 
 app.use(express.json());
@@ -24,12 +26,18 @@ app.use(cors({
   credentials: true
 }));
 
+// Serve static files from FrontendUI
+app.use(express.static(path.join(__dirname, '../FrontendUI')));
+app.use('/FrontendUI', express.static(path.join(__dirname, '../FrontendUI')));
+app.use('/frontend_js', express.static(path.join(__dirname, '../frontend_js')));
 
 // Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/upload", uploadRoutes);
 app.use("/jobs", jobRoutes);
 app.use("/api/recruiter", recruiterRoutes);
+app.use("/apply-job", applicationsRoutes);
+app.use("/api/payment", paymentRoutes);
 
 // Start server after syncing DB
 const PORT = process.env.PORT || 5001;

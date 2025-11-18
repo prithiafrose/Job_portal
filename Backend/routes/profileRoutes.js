@@ -1,6 +1,6 @@
-import express from "express";
-import User from "../models/User.js";
-import bcrypt from "bcryptjs";
+const express = require("express");
+const User = require("../models/User");
+const bcrypt = require("bcryptjs");
 
 const router = express.Router();
 
@@ -43,4 +43,4 @@ router.put("/password", async (req, res) => {
   res.json({ message: "Password updated successfully" });
 });
 
-export default router;
+module.exports = router;

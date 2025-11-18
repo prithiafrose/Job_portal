@@ -1,4 +1,4 @@
-import Job from '../models/Job.js';
+const Job = require('../models/Job');
 
 const createJob = async (req, res) => {
   try {
@@ -83,4 +83,4 @@ const deleteJob = async (req, res) => {
   }
 };
 
-export { createJob, listJobs, getJob, updateJob, deleteJob };
+module.exports = { createJob, listJobs, getJob, updateJob, deleteJob };

@@ -1,7 +1,7 @@
-import express from "express";
-import { createJob, listJobs, getJob, updateJob, deleteJob } from "../controllers/jobsController.js";
-import { getForJob } from "../controllers/applicationsController.js";
-import { authMiddleware } from "../middleware/authMiddleware.js";
+const express = require("express");
+const { createJob, listJobs, getJob, updateJob, deleteJob } = require("../controllers/jobsController");
+const { getForJob } = require("../controllers/applicationsController");
+const { authMiddleware } = require("../middleware/authMiddleware");
 
 const router = express.Router();
 
@@ -163,4 +163,4 @@ router.put("/applications/:id/status", async (req, res) => {
   }
 });
 
-export default router;
+module.exports = router;

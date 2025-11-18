@@ -1,3 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Job Portal Test - Homepage</title>
+<style>
+  body { font-family: Arial, sans-serif; margin: 20px; }
+  .job-card { border: 1px solid #ddd; padding: 15px; margin: 10px 0; border-radius: 8px; }
+  .job-card h3 { margin: 0 0 10px 0; color: #333; }
+  .job-card p { margin: 5px 0; }
+  .job-card button { background: #007bff; color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer; }
+  .job-card button:hover { background: #0056b3; }
+  .filter-container { background: #f8f9fa; padding: 15px; margin-bottom: 20px; border-radius: 8px; }
+  .filter-container input { margin: 5px; padding: 8px; border: 1px solid #ddd; border-radius: 4px; }
+  .filter-container button { margin: 5px; padding: 8px 15px; border: none; border-radius: 4px; cursor: pointer; }
+  .filter-container button:first-of-type { background: #28a745; color: white; }
+  .filter-container button:last-of-type { background: #6c757d; color: white; }
+</style>
+</head>
+<body>
+
+<h1>Job Portal - Latest Jobs</h1>
+
+<div class="filter-container">
+  <input type="text" id="jobTitle" placeholder="Job Title">
+  <input type="text" id="location" placeholder="Location">
+  <input type="text" id="skills" placeholder="Skills (comma separated)">
+  <input type="number" id="minSalary" placeholder="Min Salary">
+  <input type="number" id="maxSalary" placeholder="Max Salary">
+  <button id="applyFilters">Apply Filters</button>
+  <button id="clearFilters">Clear</button>
+</div>
+
+<div id="job-list" class="job-list"></div>
+<div id="pagination" class="pagination-container"></div>
+
+<script>
 const jobListEl = document.getElementById('job-list');
 const paginationEl = document.getElementById('pagination');
 const jobTitleInput = document.getElementById('jobTitle');
@@ -67,7 +105,7 @@ function renderJobs() {
 
       return `
       <div class="job-card">
-        ${job.logo_url ? `<img src="${job.logo_url}" alt="${job.company_name} logo" onerror="this.style.display='none'">` : ''}
+        ${job.logo_url ? `<img src="${job.logo_url}" alt="${job.company_name} logo" onerror="this.style.display='none'" style="max-width: 60px; float: right;">` : ''}
         <div>
           <h3>${job.job_position}</h3>
           <p><strong>Company:</strong> ${job.company_name}</p>
@@ -86,7 +124,7 @@ function renderJobs() {
 function renderPagination() {
   let html = '';
   for (let i = 1; i <= totalPages; i++) {
-    html += `<button class="page-btn ${i === currentPage ? 'disabled' : ''}" onclick="goToPage(${i})">${i}</button>`;
+    html += `<button style="margin: 0 5px; padding: 5px 10px; ${i === currentPage ? 'background: #007bff; color: white;' : 'background: #f8f9fa;'}" onclick="goToPage(${i})">${i}</button>`;
   }
   paginationEl.innerHTML = html;
 }
@@ -96,7 +134,7 @@ function goToPage(page) {
   fetchJobs(page);
 }
 
-// Filter and clear button listeners (once)
+// Filter and clear button listeners
 document.getElementById('applyFilters').addEventListener('click', () => {
   currentPage = 1;
   renderJobs();
@@ -116,8 +154,12 @@ document.getElementById('clearFilters').addEventListener('click', () => {
 
 // View job details
 function viewJob(id) {
-  window.location.href = `job-details.html?id=${id}`;
+  alert(`Viewing job details for job ID: ${id}\nIn a real application, this would navigate to a job details page.`);
 }
 
 // Initial fetch
 fetchJobs();
+</script>
+
+</body>
+</html>

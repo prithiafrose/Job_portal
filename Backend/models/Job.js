@@ -1,5 +1,5 @@
-import { DataTypes, Op } from "sequelize";
-import sequelize from "../config/db.js";
+const { DataTypes, Op } = require("sequelize");
+const sequelize = require("../config/db");
 
 const Job = sequelize.define("Job", {
   id: {
@@ -65,14 +65,14 @@ Job.searchJobs = async function({ query, page, limit, filters }) {
   
   if (query) {
     whereClause[Op.or] = [
-      { title: { [Op.like]: `%${query}%` } },
-      { company: { [Op.like]: `%${query}%` } },
-      { description: { [Op.like]: `%${query}%` } }
+      { job_position: { [Op.like]: `%${query}%` } },
+      { company_name: { [Op.like]: `%${query}%` } }
     ];
   }
   
   if (filters.type) {
-    whereClause.type = filters.type;
+    // Note: type field doesn't exist in current schema, but keeping for future use
+    // whereClause.type = filters.type;
   }
   
   if (filters.location) {
@@ -110,4 +110,4 @@ Job.deleteJob = async function(id) {
   return deletedRowsCount > 0;
 };
 
-export default Job;
+module.exports = Job;

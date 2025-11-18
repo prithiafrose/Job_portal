@@ -1,12 +1,12 @@
-import express from "express";
-import { authMiddleware } from "../middleware/authMiddleware.js";
-import { adminMiddleware } from "../middleware/adminMiddleware.js";
-import {
+const express = require("express");
+const { authMiddleware } = require("../middleware/authMiddleware");
+const { adminMiddleware } = require("../middleware/adminMiddleware");
+const {
   getUserStats,
   getJobStats,
   getPendingApprovals,
   getRecentRegistrations
-} from "../controllers/adminController.js";
+} = require("../controllers/adminController");
 
 const router = express.Router();
 
@@ -20,4 +20,4 @@ router.get("/jobs/stats", getJobStats);
 router.get("/jobs/pending", getPendingApprovals);
 router.get("/users/recent", getRecentRegistrations);
 
-export default router;
+module.exports = router;

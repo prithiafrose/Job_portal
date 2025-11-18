@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Apply for Job - HireWay</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .application-container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    .form-section {
+      background: white;
+      padding: 25px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    .form-group {
+      margin-bottom: 20px;
+    }
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: #333;
+    }
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #ddd;
+      border-radius: 6px;
+      font-size: 16px;
+      transition: border-color 0.3s;
+    }
+    .form-group input:focus,
+    .form-group textarea:focus {
+      outline: none;
+      border-color: #007bff;
+    }
+    .file-upload {
+      position: relative;
+      display: inline-block;
+      cursor: pointer;
+      width: 100%;
+    }
+    .file-upload input[type=file] {
+      position: absolute;
+      left: -9999px;
+    }
+    .file-upload-label {
+      display: block;
+      padding: 12px;
+      background: #f8f9fa;
+      border: 2px dashed #ddd;
+      border-radius: 6px;
+      text-align: center;
+      transition: all 0.3s;
+    }
+    .file-upload-label:hover {
+      background: #e9ecef;
+      border-color: #007bff;
+    }
+    .payment-section {
+      background: #f8f9fa;
+      padding: 20px;
+      border-radius: 8px;
+      margin: 20px 0;
+    }
+    .payment-methods {
+      display: flex;
+      gap: 15px;
+      margin: 15px 0;
+    }
+    .payment-method {
+      flex: 1;
+      padding: 15px;
+      border: 2px solid #ddd;
+      border-radius: 6px;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.3s;
+    }
+    .payment-method:hover {
+      border-color: #007bff;
+    }
+    .payment-method.selected {
+      border-color: #007bff;
+      background: #e7f3ff;
+    }
+    .btn {
+      background: #007bff;
+      color: white;
+      padding: 12px 30px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background 0.3s;
+    }
+    .btn:hover {
+      background: #0056b3;
+    }
+    .btn:disabled {
+      background: #6c757d;
+      cursor: not-allowed;
+    }
+    .error {
+      color: #dc3545;
+      font-size: 14px;
+      margin-top: 5px;
+    }
+    .success {
+      color: #28a745;
+      font-size: 14px;
+      margin-top: 5px;
+    }
+    .loading {
+      text-align: center;
+      padding: 20px;
+    }
+    .job-summary {
+      background: #e7f3ff;
+      padding: 15px;
+      border-radius: 6px;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <a href="dashboard.html">Dashboard</a>
+    <a href="job-list.html">Jobs</a>
+    <a href="applied-jobs.html">Applied Jobs</a>
+    <a href="profile.html">Profile</a>
+  </div>
+
+  <!-- Main content -->
+  <div class="main-content">
+    <div class="application-container">
+      <h1>Apply for Job</h1>
+      
+      <div id="loadingMessage" class="loading">Loading job details...</div>
+      
+      <div id="applicationForm" style="display: none;">
+        <!-- Job Summary -->
+        <div class="job-summary">
+          <h3>Job Details</h3>
+          <div id="jobSummary"></div>
+        </div>
+
+        <!-- Application Form -->
+        <form id="applyForm">
+          <!-- Personal Information -->
+          <div class="form-section">
+            <h3>Personal Information</h3>
+            <div class="form-group">
+              <label for="fullName">Full Name *</label>
+              <input type="text" id="fullName" name="fullName" required>
+            </div>
+            <div class="form-group">
+              <label for="email">Email Address *</label>
+              <input type="email" id="email" name="email" required>
+            </div>
+            <div class="form-group">
+              <label for="phone">Phone Number *</label>
+              <input type="tel" id="phone" name="phone" required>
+            </div>
+          </div>
+
+          <!-- CV Upload -->
+          <div class="form-section">
+            <h3>Upload Resume/CV *</h3>
+            <div class="form-group">
+              <div class="file-upload">
+                <input type="file" id="resume" name="resume" accept=".pdf,.doc,.docx" required>
+                <label for="resume" class="file-upload-label">
+                  <span id="fileLabel">Choose Resume/CV file (PDF, DOC, DOCX - Max 5MB)</span>
+                </label>
+              </div>
+              <div id="fileError" class="error"></div>
+            </div>
+          </div>
+
+          <!-- Cover Letter -->
+          <div class="form-section">
+            <h3>Cover Letter</h3>
+            <div class="form-group">
+              <label for="coverLetter">Why are you interested in this position?</label>
+              <textarea id="coverLetter" name="coverLetter" rows="5" placeholder="Tell us why you're a good fit for this role..."></textarea>
+            </div>
+          </div>
+
+          <!-- Payment Section -->
+          <div class="form-section">
+            <h3>Application Fee</h3>
+            <div class="payment-section">
+              <p><strong>Application Fee: ₹100</strong></p>
+              <p>This fee is required to process your application and is non-refundable.</p>
+              
+              <div class="payment-methods">
+                <div class="payment-method" data-method="card">
+                  <h4>💳 Credit/Debit Card</h4>
+                </div>
+                <div class="payment-method" data-method="upi">
+                  <h4>📱 UPI</h4>
+                </div>
+                <div class="payment-method" data-method="netbanking">
+                  <h4>🏦 Net Banking</h4>
+                </div>
+              </div>
+
+              <!-- Card Payment Form -->
+              <div id="cardPaymentForm" style="display: none;">
+                <div class="form-group">
+                  <label for="cardNumber">Card Number</label>
+                  <input type="text" id="cardNumber" placeholder="1234 5678 9012 3456" maxlength="19">
+                </div>
+                <div style="display: flex; gap: 15px;">
+                  <div class="form-group" style="flex: 1;">
+                    <label for="expiry">Expiry Date</label>
+                    <input type="text" id="expiry" placeholder="MM/YY" maxlength="5">
+                  </div>
+                  <div class="form-group" style="flex: 1;">
+                    <label for="cvv">CVV</label>
+                    <input type="text" id="cvv" placeholder="123" maxlength="3">
+                  </div>
+                </div>
+              </div>
+
+              <!-- UPI Payment Form -->
+              <div id="upiPaymentForm" style="display: none;">
+                <div class="form-group">
+                  <label for="upiId">UPI ID</label>
+                  <input type="text" id="upiId" placeholder="yourname@upi">
+                </div>
+              </div>
+
+              <!-- Net Banking Form -->
+              <div id="netbankingPaymentForm" style="display: none;">
+                <div class="form-group">
+                  <label for="bank">Select Bank</label>
+                  <select id="bank" style="width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 6px;">
+                    <option value="">Select your bank</option>
+                    <option value="sbi">State Bank of India</option>
+                    <option value="hdfc">HDFC Bank</option>
+                    <option value="icici">ICICI Bank</option>
+                    <option value="pnb">Punjab National Bank</option>
+                    <option value="axis">Axis Bank</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Submit Button -->
+          <div style="text-align: center; margin-top: 30px;">
+            <button type="submit" class="btn" id="submitBtn">
+              Submit Application & Pay ₹100
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script src="../js/utils.js"></script>
+  <script>
+    const jobId = new URLSearchParams(window.location.search).get('id');
+    const token = localStorage.getItem('token');
+    const user = JSON.parse(localStorage.getItem('user') || '{}');
+    
+    let selectedPaymentMethod = null;
+
+    // Check authentication
+    if (!token) {
+      alert('Please login first to apply for jobs');
+      window.location.href = '../../Auth/login.html?redirect=' + encodeURIComponent(window.location.href);
+      exit;
+    }
+
+    // Load job details
+    async function loadJobDetails() {
+      try {
+        const res = await fetch(API_BASE + '/jobs/' + jobId);
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.error || 'Job not found');
+
+        document.getElementById('jobSummary').innerHTML = `
+          <p><strong>Position:</strong> ${escapeHTML(data.title)}</p>
+          <p><strong>Company:</strong> ${escapeHTML(data.company)}</p>
+          <p><strong>Location:</strong> ${escapeHTML(data.location)}</p>
+          <p><strong>Salary:</strong> $${data.salary}</p>
+        `;
+
+        // Pre-fill user information
+        document.getElementById('fullName').value = user.username || '';
+        document.getElementById('email').value = user.email || '';
+        document.getElementById('phone').value = user.mobile || '';
+
+        document.getElementById('loadingMessage').style.display = 'none';
+        document.getElementById('applicationForm').style.display = 'block';
+      } catch (err) {
+        document.getElementById('loadingMessage').innerHTML = `<p style="color: red">${err.message}</p>`;
+      }
+    }
+
+    // Payment method selection
+    document.querySelectorAll('.payment-method').forEach(method => {
+      method.addEventListener('click', function() {
+        document.querySelectorAll('.payment-method').forEach(m => m.classList.remove('selected'));
+        this.classList.add('selected');
+        selectedPaymentMethod = this.dataset.method;
+        
+        // Hide all payment forms
+        document.getElementById('cardPaymentForm').style.display = 'none';
+        document.getElementById('upiPaymentForm').style.display = 'none';
+        document.getElementById('netbankingPaymentForm').style.display = 'none';
+        
+        // Show selected payment form
+        if (selectedPaymentMethod === 'card') {
+          document.getElementById('cardPaymentForm').style.display = 'block';
+        } else if (selectedPaymentMethod === 'upi') {
+          document.getElementById('upiPaymentForm').style.display = 'block';
+        } else if (selectedPaymentMethod === 'netbanking') {
+          document.getElementById('netbankingPaymentForm').style.display = 'block';
+        }
+      });
+    });
+
+    // File upload handling
+    document.getElementById('resume').addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      const fileError = document.getElementById('fileError');
+      const fileLabel = document.getElementById('fileLabel');
+      
+      if (file) {
+        // Check file size (5MB limit)
+        if (file.size > 5 * 1024 * 1024) {
+          fileError.textContent = 'File size must be less than 5MB';
+          e.target.value = '';
+          fileLabel.textContent = 'Choose Resume/CV file (PDF, DOC, DOCX - Max 5MB)';
+          return;
+        }
+        
+        // Check file type
+        const allowedTypes = ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
+        if (!allowedTypes.includes(file.type)) {
+          fileError.textContent = 'Only PDF, DOC, and DOCX files are allowed';
+          e.target.value = '';
+          fileLabel.textContent = 'Choose Resume/CV file (PDF, DOC, DOCX - Max 5MB)';
+          return;
+        }
+        
+        fileError.textContent = '';
+        fileLabel.textContent = `Selected: ${file.name}`;
+      }
+    });
+
+    // Form submission
+    document.getElementById('applyForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      if (!selectedPaymentMethod) {
+        alert('Please select a payment method');
+        return;
+      }
+      
+      const submitBtn = document.getElementById('submitBtn');
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Processing...';
+      
+      try {
+        // Create FormData for file upload
+        const formData = new FormData();
+        formData.append('job_id', jobId);
+        formData.append('cover_letter', document.getElementById('coverLetter').value);
+        formData.append('payment_method', selectedPaymentMethod);
+        formData.append('payment_status', 'completed');
+        
+        const resumeFile = document.getElementById('resume').files[0];
+        if (resumeFile) {
+          formData.append('resume', resumeFile);
+        }
+        
+        const res = await fetch('http://localhost:5001/applications', {
+          method: 'POST',
+          headers: {
+            'Authorization': `Bearer ${token}`
+          },
+          body: formData
+        });
+        
+        const data = await res.json();
+        
+        if (res.ok) {
+          alert('Application submitted successfully!');
+          window.location.href = 'applied-jobs.html';
+        } else {
+          throw new Error(data.error || 'Failed to submit application');
+        }
+      } catch (err) {
+        alert(err.message);
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Submit Application & Pay ₹100';
+      }
+    });
+
+    // Format card number input
+    document.getElementById('cardNumber').addEventListener('input', function(e) {
+      let value = e.target.value.replace(/\s/g, '');
+      let formattedValue = value.match(/.{1,4}/g)?.join(' ') || value;
+      e.target.value = formattedValue;
+    });
+
+    // Format expiry date input
+    document.getElementById('expiry').addEventListener('input', function(e) {
+      let value = e.target.value.replace(/\D/g, '');
+      if (value.length >= 2) {
+        value = value.slice(0, 2) + '/' + value.slice(2, 4);
+      }
+      e.target.value = value;
+    });
+
+    // Only allow numbers for CVV
+    document.getElementById('cvv').addEventListener('input', function(e) {
+      e.target.value = e.target.value.replace(/\D/g, '');
+    });
+
+    // Initialize
+    loadJobDetails();
+  </script>
+</body>
+</html>

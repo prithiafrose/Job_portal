@@ -1,16 +1,16 @@
 // Backend/controllers/authController.js
-import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
-import dotenv from "dotenv";
-import User from "../models/User.js";
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+const dotenv = require("dotenv");
+const User = require("../models/User");
 
 dotenv.config();
 const jwtSecret = process.env.JWT_SECRET || "change_this";
 const tokenExpiry = process.env.TOKEN_EXPIRY || "7d";
 
-export const register = async (req, res) => {
+const register = async (req, res) => {
   try {
-    const { username, email, mobile, password, role } = req.body;
+    const { username, email, mobile, password, role, redirect } = req.body;
     if (!username || !email || !mobile || !password)
       return res.status(400).json({ error: "All fields are required" });
 
@@ -23,19 +23,26 @@ export const register = async (req, res) => {
 
     const token = jwt.sign({ id: user.id, email: user.email, role: user.role }, jwtSecret, { expiresIn: tokenExpiry });
 
-    res.status(201).json({
+    const response = {
       token,
       user: { id: user.id, username: user.username, email: user.email, mobile: user.mobile, role: user.role }
-    });
+    };
+
+    // Include redirect URL if provided
+    if (redirect) {
+      response.redirect = redirect;
+    }
+
+    res.status(201).json(response);
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Server error" });
   }
 };
 
-export const login = async (req, res) => {
+const login = async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { email, password, redirect } = req.body;
     if (!email || !password) return res.status(400).json({ error: "Email and password required" });
 
     const user = await User.findOne({ where: { email } });
@@ -46,14 +53,24 @@ export const login = async (req, res) => {
 
     const token = jwt.sign({ id: user.id, email: user.email, role: user.role }, jwtSecret, { expiresIn: tokenExpiry });
 
-    res.json({ token, user: { id: user.id, username: user.username, email: user.email, mobile: user.mobile, role: user.role } });
+    const response = { 
+      token, 
+      user: { id: user.id, username: user.username, email: user.email, mobile: user.mobile, role: user.role } 
+    };
+
+    // Include redirect URL if provided
+    if (redirect) {
+      response.redirect = redirect;
+    }
+
+    res.json(response);
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "Server error" });
   }
 };
 
-export const me = async (req, res) => {
+const me = async (req, res) => {
   try {
     const userId = req.user?.id;
     if (!userId) return res.status(401).json({ error: "Unauthorized" });
@@ -68,7 +85,7 @@ export const me = async (req, res) => {
   }
 };
 
-export const logout = async (req, res) => {
+const logout = async (req, res) => {
   try {
     // For JWT-based auth, logout is handled client-side by removing the token
     // We can optionally blacklist tokens if needed, but for now just return success
@@ -78,3 +95,5 @@ export const logout = async (req, res) => {
     res.status(500).json({ error: "Server error" });
   }
 };
+
+module.exports = { register, login, me, logout };

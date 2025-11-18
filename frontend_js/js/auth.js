@@ -2,6 +2,15 @@ document.addEventListener("DOMContentLoaded", () => {
   // ==================== Backend Base URL ====================
   const API_BASE = "http://localhost:5001/api/auth";
 
+  // ==================== Handle Redirect URL ====================
+  const urlParams = new URLSearchParams(window.location.search);
+  const redirectUrl = urlParams.get("redirect");
+  
+  if (redirectUrl) {
+    // Store redirect URL for after login/register
+    localStorage.setItem("redirectAfterLogin", decodeURIComponent(redirectUrl));
+  }
+
   // ==================== Show/Hide Password ====================
   const togglePassword = (checkboxId, inputId) => {
     const checkbox = document.getElementById(checkboxId);
@@ -59,17 +68,25 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const userRole = data.user.role;
 
-        setTimeout(() => 
-          {if (userRole === 'admin') {
-  window.location.href = "/FrontendUI/admin/dashboard.html";
-} else if (userRole === 'student') {
-  window.location.href = "/frontend_js/Student_panel/dashboard.html";
-} else if (userRole === 'recruiter') {
-  window.location.href = "/FrontendUI/recruiter/dashboard.html";
-} else {
-  alert("Invalid role returned from server!");
-}
+        setTimeout(() => {
+          // Check if there's a redirect URL stored
+          const redirectUrl = localStorage.getItem("redirectAfterLogin");
+          if (redirectUrl) {
+            localStorage.removeItem("redirectAfterLogin");
+            window.location.href = redirectUrl;
+            return;
+          }
 
+          // Default role-based redirects
+          if (userRole === 'admin') {
+            window.location.href = "/FrontendUI/admin/dashboard.html";
+          } else if (userRole === 'student') {
+            window.location.href = "/frontend_js/Student_panel/dashboard.html";
+          } else if (userRole === 'recruiter') {
+            window.location.href = "/FrontendUI/recruiter/dashboard.html";
+          } else {
+            alert("Invalid role returned from server!");
+          }
         }, 800);
       } catch (err) {
         loading.textContent = "";
@@ -115,23 +132,33 @@ const formData = {
         loading.textContent = "";
 
         if (!res.ok) throw new Error(data.error || "Registration failed");
+        localStorage.setItem("token", data.token);
+localStorage.setItem("user", JSON.stringify(data.user));
 
         error.style.color = "green";
         error.textContent = "Registration successful! Redirecting...";
 
-        const userRole = formData.role;
+const userRole = data.user.role;
 
         setTimeout(() => {
-          if (userRole === 'admin') {
-  window.location.href = "/FrontendUI/admin/dashboard.html";
-} else if (userRole === 'student') {
-  window.location.href = "/frontend_js/Student_panel/dashboard.html";
-} else if (userRole === 'recruiter') {
-  window.location.href = "/FrontendUI/recruiter/dashboard.html";
-} else {
-  alert("Invalid role returned from server!");
-}
+          // Check if there's a redirect URL stored
+          const redirectUrl = localStorage.getItem("redirectAfterLogin");
+          if (redirectUrl) {
+            localStorage.removeItem("redirectAfterLogin");
+            window.location.href = redirectUrl;
+            return;
+          }
 
+          // Default role-based redirects
+          if (userRole === 'admin') {
+            window.location.href = "/FrontendUI/admin/dashboard.html";
+          } else if (userRole === 'student') {
+            window.location.href = "/frontend_js/Student_panel/dashboard.html";
+          } else if (userRole === 'recruiter') {
+            window.location.href = "/FrontendUI/recruiter/dashboard.html";
+          } else {
+            alert("Invalid role returned from server!");
+          }
         }, 900);
       } catch (err) {
         loading.textContent = "";

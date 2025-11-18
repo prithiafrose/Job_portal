@@ -1,6 +1,6 @@
-import express from "express";
-import { register, login, me, logout } from "../controllers/authController.js";
-import { authMiddleware } from "../middleware/authMiddleware.js";
+const express = require("express");
+const { register, login, me, logout } = require("../controllers/authController");
+const { authMiddleware } = require("../middleware/authMiddleware");
 
 const router = express.Router();
 
@@ -9,4 +9,4 @@ router.post("/login", login);
 router.get("/me", authMiddleware, me); // JWT required
 router.post("/logout", logout); // Logout endpoint
 
-export default router;
+module.exports = router;

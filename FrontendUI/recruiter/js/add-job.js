@@ -104,16 +104,21 @@ document.getElementById("jobForm").addEventListener("submit", async (e) => {
 
     if (res.ok) {
       const msgEl = document.getElementById("msg");
-      msgEl.textContent = "Job posted successfully!";
+      msgEl.textContent = "Job posted successfully! It will appear on the homepage shortly.";
       msgEl.style.color = "lightgreen";
       
       // Reset form
       document.getElementById("jobForm").reset();
       
-      // Redirect to my jobs after 2 seconds
+      // Optionally redirect to my jobs after 3 seconds
       setTimeout(() => {
-        window.location.href = "my-jobs.html";
-      }, 2000);
+        if (confirm("Would you like to view your posted jobs?")) {
+          window.location.href = "my-jobs.html";
+        } else {
+          // Or go to homepage to see the job
+          window.location.href = "../admin/index.html";
+        }
+      }, 3000);
     } else {
       throw new Error(data.error || 'Failed to post job');
     }

@@ -1,9 +1,9 @@
-import User from "../models/User.js";
-import Job from "../models/Job.js";
-import { Op } from "sequelize";
+const User = require("../models/User");
+const Job = require("../models/Job");
+const { Op } = require("sequelize");
 
 // Dashboard Statistics
-export const getUserStats = async (req, res) => {
+const getUserStats = async (req, res) => {
   try {
     const totalUsers = await User.count();
     const students = await User.count({ where: { role: 'student' } });
@@ -22,7 +22,7 @@ export const getUserStats = async (req, res) => {
   }
 };
 
-export const getJobStats = async (req, res) => {
+const getJobStats = async (req, res) => {
   try {
     const totalJobs = await Job.count();
     const activeJobs = await Job.count({ where: { status: 'active' } });
@@ -41,7 +41,7 @@ export const getJobStats = async (req, res) => {
   }
 };
 
-export const getPendingApprovals = async (req, res) => {
+const getPendingApprovals = async (req, res) => {
   try {
     const pendingCount = await Job.count({ 
       where: { status: 'pending' } 
@@ -56,7 +56,7 @@ export const getPendingApprovals = async (req, res) => {
   }
 };
 
-export const getRecentRegistrations = async (req, res) => {
+const getRecentRegistrations = async (req, res) => {
   try {
     // Get registrations from last 7 days
     const oneWeekAgo = new Date();
@@ -78,3 +78,5 @@ export const getRecentRegistrations = async (req, res) => {
     res.status(500).json({ error: "Server error" });
   }
 };
+
+module.exports = { getUserStats, getJobStats, getPendingApprovals, getRecentRegistrations };
