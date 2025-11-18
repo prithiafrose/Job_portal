@@ -13,32 +13,35 @@
     <a href="my-jobs.html">My Jobs</a>
     <a href="applicants.html">Applicants</a>
     <a href="profile.html">Profile</a>
+    <button class="btn btn-logout" onclick="logout()">Logout</button>
   </div>
 
   <div class="main">
     <h1>Add New Job</h1>
 
     <form id="jobForm" class="card">
-      <label>Job Title</label>
-      <input type="text" id="title">
+      <label>Job Position</label>
+      <input type="text" id="job_position" required>
+
+      <label>Company Name</label>
+      <input type="text" id="company_name" required>
 
       <label>Location</label>
-      <input type="text" id="location">
+      <input type="text" id="location" required>
 
-      <label>Salary</label>
-      <input type="number" id="salary">
+      <label>Monthly Salary</label>
+      <input type="number" id="monthly_salary" required>
 
-      <label>Job Type</label>
-      <select id="type">
-        <option>Full-Time</option>
-        <option>Part-Time</option>
-        <option>Internship</option>
-      </select>
+      <label>Skills Required (comma-separated)</label>
+      <input type="text" id="skills_required" placeholder="e.g., JavaScript, React, Node.js" required>
 
-      <label>Description</label>
-      <textarea id="description"></textarea>
+      <label>Job Description</label>
+      <textarea id="description" rows="5"></textarea>
 
-      <button class="btn">Post Job</button>
+      <label>Company Logo URL (optional)</label>
+      <input type="url" id="logo_url" placeholder="https://example.com/logo.png">
+
+      <button type="submit" class="btn">Post Job</button>
     </form>
 
     <p id="msg"></p>
@@ -46,5 +49,11 @@
   </div>
 
   <script src="js/add-job.js"></script>
+  <script>
+    function logout() {
+      localStorage.removeItem('token');
+      window.location.href = '../Auth/login.html';
+    }
+  </script>
 </body>
 </html>

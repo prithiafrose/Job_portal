@@ -117,6 +117,105 @@ table tr:hover {
   background: #0d1b2a;
 }
 
+/* ====================== Additional Styles ====================== */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+
+.page-header h1 {
+  margin: 0;
+}
+
+.filter-section {
+  margin-bottom: 20px;
+}
+
+.filter-section select {
+  width: 200px;
+  padding: 8px;
+  border: 1px solid #64ffda;
+  border-radius: 6px;
+  background: #0d1b2a;
+  color: white;
+}
+
+.application-item {
+  padding: 10px 0;
+  border-bottom: 1px solid #1b2a49;
+}
+
+.application-item:last-child {
+  border-bottom: none;
+}
+
+.status {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+.status.pending {
+  background: #ffa500;
+  color: #000;
+}
+
+.status.reviewed {
+  background: #17a2b8;
+  color: #fff;
+}
+
+.status.accepted {
+  background: #28a745;
+  color: #fff;
+}
+
+.status.rejected {
+  background: #dc3545;
+  color: #fff;
+}
+
+.job-actions {
+  margin-top: 15px;
+  display: flex;
+  gap: 10px;
+}
+
+.btn-sm {
+  padding: 6px 12px;
+  font-size: 14px;
+}
+
+.btn-danger {
+  background: #dc3545;
+  color: white;
+}
+
+.btn-danger:hover {
+  background: #c82333;
+}
+
+.btn-logout {
+  margin-top: auto;
+  background: #dc3545;
+  color: white;
+}
+
+.btn-logout:hover {
+  background: #c82333;
+}
+
 /* ====================== Responsive ====================== */
 @media (max-width: 768px) {
   body {
@@ -133,5 +232,16 @@ table tr:hover {
   }
   .main {
     padding: 15px;
+  }
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+  .page-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 15px;
+  }
+  .job-actions {
+    flex-direction: column;
   }
 }

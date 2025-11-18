@@ -1,28 +1,48 @@
+
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Recruiter Profile</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Profile</title>
   <link rel="stylesheet" href="css/recruiter.css">
 </head>
-
 <body>
+
   <div class="sidebar">
-    <h2>Recruiter</h2>
-    <a href="dashboard.html">Dashboard</a>
+  <a href="dashboard.html">Dashboard</a>
     <a href="add-job.html">Add Job</a>
     <a href="my-jobs.html">My Jobs</a>
     <a href="applicants.html">Applicants</a>
     <a href="profile.html">Profile</a>
   </div>
 
-  <div class="main">
-    <h1>Your Profile</h1>
-
+  <div class="main-content">
+    <h2>Recruiter</h2>
     <div class="card">
-      <p><strong>Name:</strong> <span id="name"></span></p>
-      <p><strong>Email:</strong> <span id="email"></span></p>
-    </div>
+      <form id="profile-form">
+        <label>Username</label>
+        <input type="text" value="Admin">
 
+        <label>Email</label>
+        <input type="email" value="admin@jobportal.com">
+
+        <label>Mobile</label>
+        <input type="text" value="(555) 123-4567">
+
+        <label>Current Password</label>
+        <input type="password">
+
+        <label>New Password</label>
+        <input type="password">
+
+        <label>Confirm New Password</label>
+        <input type="password">
+
+        <button class="btn" type="submit">Update Profile</button>
+      </form>
+    </div>
   </div>
+
 </body>
 </html>

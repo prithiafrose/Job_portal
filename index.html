@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Job Portal - HireWay</title>
+<link rel="stylesheet" href="FrontendUI/css/index.css">
+</head>
+<body>
+
+ <header class="site-header">
+    <div class="container header-inner">
+      <a href="index.html" class="logo"><span id="hire">Hire</span>Way</a>
+      <nav class="nav">
+
+        <a href="FrontendUI/Auth/login.html" id="auth-link">Login</a>
+        <a href="FrontendUI/Auth/Register.html" id="register-link">Register</a>
+      </nav>
+    </div>
+  </header>
+
+
+<div class="filter-container">
+  <input type="text" id="jobTitle" placeholder="Job Title">
+  <input type="text" id="location" placeholder="Location">
+  <input type="text" id="skills" placeholder="Skills (comma separated)">
+  <input type="number" id="minSalary" placeholder="Min Salary">
+  <input type="number" id="maxSalary" placeholder="Max Salary">
+  <button id="applyFilters">Apply Filters</button>
+  <button id="clearFilters">Clear</button>
+</div>
+
+<div id="job-list" class="job-list"></div>
+<div id="pagination" class="pagination-container"></div>
+<script src="frontend_js/js/utils.js" defer></script>
+
+
+<script src="FrontendUI/index.js"></script>
+</body>
+</html>

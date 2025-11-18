@@ -84,7 +84,7 @@ document.addEventListener("DOMContentLoaded", () => {
         email: registerForm.email.value.trim(),
         mobile: registerForm.mobile.value.trim(),
         password: registerForm.password.value.trim(),
-        role: registerForm.role ? registerForm.role.value : "candidate",
+        role: registerForm.role ? registerForm.role.value : "student",
       };
 
       try {

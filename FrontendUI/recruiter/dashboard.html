@@ -13,23 +13,92 @@
     <a href="my-jobs.html">My Jobs</a>
     <a href="applicants.html">Applicants</a>
     <a href="profile.html">Profile</a>
+    <button class="btn btn-logout" onclick="logout()">Logout</button>
   </div>
 
   <div class="main">
-    <h1>Welcome, Recruiter</h1>
+    <h1>Welcome, <span id="recruiterName">Recruiter</span></h1>
 
-    <div class="card">
-      <h3>Total Jobs Posted</h3>
-      <p id="totalJobs">0</p>
+    <div class="stats-grid">
+      <div class="card">
+        <h3>Total Jobs Posted</h3>
+        <p id="totalJobs">0</p>
+      </div>
+
+      <div class="card">
+        <h3>Total Applicants</h3>
+        <p id="totalApplicants">0</p>
+      </div>
+
+      <div class="card">
+        <h3>Active Jobs</h3>
+        <p id="activeJobs">0</p>
+      </div>
+
+      <div class="card">
+        <h3>Pending Applications</h3>
+        <p id="pendingApplications">0</p>
+      </div>
     </div>
 
-    <div class="card">
-      <h3>Total Applicants</h3>
-      <p id="totalApplicants">0</p>
+    <div class="recent-section">
+      <h2>Recent Applications</h2>
+      <div id="recentApplications" class="card">
+        <p>Loading recent applications...</p>
+      </div>
     </div>
 
   </div>
 
   <script src="js/recruiter.js"></script>
+  <script>
+    // Load recruiter info
+    const token = localStorage.getItem('token');
+    if (token) {
+      fetch('http://localhost:5001/api/auth/me', {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      })
+      .then(r => r.json())
+      .then(data => {
+        if (data.user) {
+          document.getElementById('recruiterName').textContent = data.user.username;
+        }
+      })
+      .catch(err => console.error('Error loading user info:', err));
+    }
+
+    // Logout function
+    function logout() {
+      localStorage.removeItem('token');
+      window.location.href = '../Auth/login.html';
+    }
+
+    // Load recent applications
+    fetch('http://localhost:5001/api/applications/recruiter/recent', {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    })
+    .then(r => r.json())
+    .then(data => {
+      const container = document.getElementById('recentApplications');
+      if (data.applications && data.applications.length > 0) {
+        container.innerHTML = data.applications.map(app => `
+          <div class="application-item">
+            <strong>${app.student_name}</strong> applied for <strong>${app.job_title}</strong>
+            <span class="status ${app.status}">${app.status}</span>
+          </div>
+        `).join('');
+      } else {
+        container.innerHTML = '<p>No recent applications</p>';
+      }
+    })
+    .catch(err => {
+      console.error('Error loading recent applications:', err);
+      document.getElementById('recentApplications').innerHTML = '<p>Error loading applications</p>';
+    });
+  </script>
 </body>
 </html>
