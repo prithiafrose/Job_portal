@@ -37,6 +37,12 @@ h2 {
 .form-group {
   margin-bottom: 15px;
 }
+.role-options {
+  display: flex;
+  gap: 20px; /* space between radio options */
+  margin-top: 5px;
+}
+
 
 .form-group label {
   display: block;

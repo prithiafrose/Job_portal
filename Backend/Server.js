@@ -7,6 +7,8 @@ import sequelize from "./config/db.js";
 import uploadRoutes from "./routes/upload.js";
 import Job from "./models/Job.js";
 import jobRoutes from "./routes/jobs.js";
+import path from "path";
+
 
 
 

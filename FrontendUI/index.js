@@ -96,7 +96,7 @@ document.getElementById('clearFilters').addEventListener('click', () => {
 
 // View job details
 function viewJob(id) {
-  window.location.href = `/pages/job-details.html?id=${id}`;
+  window.location.href = `/FrontendUI/admin/job-details.html?id=${id}`;
 }
 
 // Initial fetch

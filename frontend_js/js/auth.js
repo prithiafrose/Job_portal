@@ -36,7 +36,7 @@ document.addEventListener("DOMContentLoaded", () => {
       };
 
       try {
-        const res = await fetch(`${API_BASE}/login`, {  // ✅ fixed syntax
+        const res = await fetch(`${API_BASE}/login`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(formData),
@@ -54,8 +54,19 @@ document.addEventListener("DOMContentLoaded", () => {
         error.style.color = "green";
         error.textContent = "Login successful! Redirecting...";
 
-        setTimeout(() => {
-          window.location.href = "../index.html";
+        const userRole = data.user.role;
+
+        setTimeout(() => 
+          {if (userRole === 'admin') {
+  window.location.href = "/FrontendUI/admin/dashboard.html";
+} else if (userRole === 'student') {
+  window.location.href = "/frontend_js/Student_panel/dashboard.html";
+} else if (userRole === 'recruiter') {
+  window.location.href = "/FrontendUI/recruiter/dashboard.html";
+} else {
+  alert("Invalid role returned from server!");
+}
+
         }, 800);
       } catch (err) {
         loading.textContent = "";
@@ -78,17 +89,20 @@ document.addEventListener("DOMContentLoaded", () => {
       error.textContent = "";
       loading.textContent = "Loading...";
       error.style.color = "red";
+       const selectedRole = registerForm.querySelector('input[name="role"]:checked');
+const role = selectedRole ? selectedRole.value : "student"; // fallback
 
-      const formData = {
-        username: registerForm.username.value.trim(),
-        email: registerForm.email.value.trim(),
-        mobile: registerForm.mobile.value.trim(),
-        password: registerForm.password.value.trim(),
-        role: registerForm.role ? registerForm.role.value : "candidate",
-      };
+const formData = {
+  username: registerForm.username.value.trim(),
+  email: registerForm.email.value.trim(),
+  mobile: registerForm.mobile.value.trim(),
+  password: registerForm.password.value.trim(),
+  role: role,
+};
+
 
       try {
-        const res = await fetch(`${API_BASE}/register`, {  // ✅ fixed syntax
+        const res = await fetch(`${API_BASE}/register`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(formData),
@@ -102,8 +116,19 @@ document.addEventListener("DOMContentLoaded", () => {
         error.style.color = "green";
         error.textContent = "Registration successful! Redirecting...";
 
+        const userRole = formData.role;
+
         setTimeout(() => {
-          window.location.href = "login.html";
+          if (userRole === 'admin') {
+  window.location.href = "/FrontendUI/admin/dashboard.html";
+} else if (userRole === 'student') {
+  window.location.href = "/frontend_js/Student_panel/dashboard.html";
+} else if (userRole === 'recruiter') {
+  window.location.href = "/FrontendUI/recruiter/dashboard.html";
+} else {
+  alert("Invalid role returned from server!");
+}
+
         }, 900);
       } catch (err) {
         loading.textContent = "";
