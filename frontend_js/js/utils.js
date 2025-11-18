@@ -36,7 +36,7 @@ function setAuthUI() {
     });
   } else {
     link.textContent = 'Login';
-    link.href = '/pages/login.html';
+    link.href = '/FrontendUI/Auth/login.html';
   }
 }
 

@@ -13,7 +13,7 @@ let jobsData = [];
 // Fetch jobs from backend
 async function fetchJobs(page = 1) {
   try {
-    const res = await fetch(`http://localhost:3000/jobs?page=${page}`);
+const res = await fetch(`http://localhost:5001/jobs?page=${page}`);
     const data = await res.json();
     jobsData = data.jobs;
     totalPages = data.totalPages;

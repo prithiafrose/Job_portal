@@ -1,12 +1,31 @@
-const express = require('express');
+// backend/routes/jobs.js
+import express from "express";
+import Job from "../models/Job.js"; // your Job model
+
 const router = express.Router();
-const jobsCtrl = require('../controllers/jobsController');
-const { authMiddleware } = require('../middleware/authMiddleware');
 
-router.get('/', jobsCtrl.listJobs);
-router.get('/:id', jobsCtrl.getJob);
-router.post('/', authMiddleware, jobsCtrl.createJob);
-router.put('/:id', authMiddleware, jobsCtrl.updateJob);
-router.delete('/:id', authMiddleware, jobsCtrl.deleteJob);
+// GET /jobs?page=1
+router.get("/", async (req, res) => {
+  try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = 5; // jobs per page
+    const offset = (page - 1) * limit;
 
-module.exports = router;
+    const { count, rows } = await Job.findAndCountAll({
+      limit,
+      offset,
+      order: [["id", "DESC"]],
+    });
+
+    res.json({
+      jobs: rows,
+      totalPages: Math.ceil(count / limit),
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+export default router;
+

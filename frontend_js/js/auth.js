@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
   // ==================== Backend Base URL ====================
-  const API_BASE = "http://localhost:5000/api"; // Change to your backend URL if needed
+  const API_BASE = "http://localhost:5001/api/auth";
 
   // ==================== Show/Hide Password ====================
   const togglePassword = (checkboxId, inputId) => {
@@ -17,9 +17,7 @@ document.addEventListener("DOMContentLoaded", () => {
   togglePassword("showLoginPassword", "loginPassword");
   togglePassword("showRegisterPassword", "registerPassword");
 
-  // ===========================================================
   // ==================== LOGIN FORM ===========================
-  // ===========================================================
   const loginForm = document.getElementById("loginSubmit");
 
   if (loginForm) {
@@ -34,14 +32,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
       const formData = {
         email: loginForm.email.value.trim(),
-        password: loginForm.password.value.trim()
+        password: loginForm.password.value.trim(),
       };
 
       try {
         const res = await fetch(`${API_BASE}/login`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(formData)
+          body: JSON.stringify(formData),
         });
 
         const data = await res.json();
@@ -59,7 +57,6 @@ document.addEventListener("DOMContentLoaded", () => {
         setTimeout(() => {
           window.location.href = "../index.html";
         }, 800);
-
       } catch (err) {
         loading.textContent = "";
         error.style.color = "red";
@@ -68,9 +65,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // ===========================================================
-  // ==================== REGISTER FORM =========================
-  // ===========================================================
+  // ==================== REGISTER FORM ========================
   const registerForm = document.getElementById("registerSubmit");
 
   if (registerForm) {
@@ -85,19 +80,18 @@ document.addEventListener("DOMContentLoaded", () => {
       error.style.color = "red";
 
       const formData = {
-        username: registerForm.username.value,
-        email: registerForm.email.value,
-        mobile: registerForm.mobile.value,
-        password: registerForm.password.value,
-          role: registerForm.role ? registerForm.role.value : "candidate" // include role
-
+        username: registerForm.username.value.trim(),
+        email: registerForm.email.value.trim(),
+        mobile: registerForm.mobile.value.trim(),
+        password: registerForm.password.value.trim(),
+        role: registerForm.role ? registerForm.role.value : "candidate",
       };
 
       try {
         const res = await fetch(`${API_BASE}/register`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(formData)
+          body: JSON.stringify(formData),
         });
 
         const data = await res.json();
@@ -111,7 +105,6 @@ document.addEventListener("DOMContentLoaded", () => {
         setTimeout(() => {
           window.location.href = "login.html";
         }, 900);
-
       } catch (err) {
         loading.textContent = "";
         error.style.color = "red";
@@ -120,4 +113,3 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 });
-
