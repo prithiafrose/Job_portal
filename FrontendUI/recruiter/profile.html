@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -13,14 +14,32 @@
     <a href="my-jobs.html">My Jobs</a>
     <a href="applicants.html">Applicants</a>
     <a href="profile.html">Profile</a>
+    <button class="logout-btn" onclick="logout()">Logout</button>
   </div>
 
   <div class="main">
     <h1>Your Profile</h1>
 
     <div class="card">
-      <p><strong>Name:</strong> <span id="name"></span></p>
-      <p><strong>Email:</strong> <span id="email"></span></p>
+       <label>Username</label>
+        <input type="text" value="Admin">
+
+        <label>Email</label>
+        <input type="email" value="admin@jobportal.com">
+
+        <label>Mobile</label>
+        <input type="text" value="(555) 123-4567">
+
+        <label>Current Password</label>
+        <input type="password">
+
+        <label>New Password</label>
+        <input type="password">
+
+        <label>Confirm New Password</label>
+        <input type="password">
+
+        <button class="btn" type="submit">Update Profile</button>
     </div>
 
   </div>

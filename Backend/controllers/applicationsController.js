@@ -1,9 +1,9 @@
-const multer = require('multer');
-const path = require('path');
-const fs = require('fs');
-const Application = require('../models/Application');
+import multer from 'multer';
+import path from 'path';
+import fs from 'fs';
+import Application from '../models/Application.js';
 
-const uploadsDir = path.join(__dirname, '..', 'uploads');
+const uploadsDir = path.join(process.cwd(), 'uploads');
 if (!fs.existsSync(uploadsDir)) fs.mkdirSync(uploadsDir, { recursive: true });
 
 const storage = multer.diskStorage({
@@ -44,4 +44,4 @@ const getForJob = async (req, res) => {
   }
 };
 
-module.exports = { apply, getForJob };
+export { apply, getForJob };

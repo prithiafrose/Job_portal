@@ -13,32 +13,37 @@
     <a href="my-jobs.html">My Jobs</a>
     <a href="applicants.html">Applicants</a>
     <a href="profile.html">Profile</a>
+    <button class="logout-btn" onclick="logout()">Logout</button>
   </div>
 
   <div class="main">
     <h1>Add New Job</h1>
 
     <form id="jobForm" class="card">
-      <label>Job Title</label>
-      <input type="text" id="title">
+      <label>Job Title *</label>
+      <input type="text" id="title" required>
 
-      <label>Location</label>
-      <input type="text" id="location">
+      <label>Company *</label>
+      <input type="text" id="company" required>
+
+      <label>Location *</label>
+      <input type="text" id="location" required>
 
       <label>Salary</label>
-      <input type="number" id="salary">
+      <input type="number" id="salary" placeholder="e.g., 50000">
 
       <label>Job Type</label>
       <select id="type">
-        <option>Full-Time</option>
-        <option>Part-Time</option>
-        <option>Internship</option>
+        <option value="Full-Time">Full-Time</option>
+        <option value="Part-Time">Part-Time</option>
+        <option value="Internship">Internship</option>
+        <option value="Contract">Contract</option>
       </select>
 
       <label>Description</label>
-      <textarea id="description"></textarea>
+      <textarea id="description" rows="6" placeholder="Job description, requirements, responsibilities..."></textarea>
 
-      <button class="btn">Post Job</button>
+      <button type="submit" class="btn">Post Job</button>
     </form>
 
     <p id="msg"></p>
