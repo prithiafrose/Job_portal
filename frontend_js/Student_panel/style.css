@@ -197,3 +197,31 @@ table tr:hover {
 #job-list .job-card a:hover {
   color: #00ffab;
 }
+.header {
+  position: fixed;
+  top: 0;
+  left: 200px; /* same width as sidebar */
+  right: 0;
+  height: 60px;
+  background-color: #f4f4f4;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  z-index: 1000;
+}
+
+.logout-btn {
+  padding: 8px 15px;
+  background-color: #333;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+.main-content {
+  margin-top: 80px; /* leave space for fixed header */
+}
+
