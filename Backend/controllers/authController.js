@@ -67,3 +67,14 @@ export const me = async (req, res) => {
     res.status(500).json({ error: "Server error" });
   }
 };
+
+export const logout = async (req, res) => {
+  try {
+    // For JWT-based auth, logout is handled client-side by removing the token
+    // We can optionally blacklist tokens if needed, but for now just return success
+    res.json({ message: "Logout successful" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Server error" });
+  }
+};

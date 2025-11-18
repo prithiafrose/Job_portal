@@ -1,24 +1,129 @@
-const API_BASE = "http://localhost:5000/api";
+const API_BASE = "http://localhost:5001/api";
+
+// Get auth token
+function getAuthToken() {
+  return localStorage.getItem('token');
+}
+
+// Common fetch options with auth
+function authFetchOptions(options = {}) {
+  return {
+    ...options,
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${getAuthToken()}`,
+      ...options.headers
+    }
+  };
+}
+
+// Logout function
+window.logout = function() {
+  if (confirm('Are you sure you want to logout?')) {
+    fetch(`${API_BASE}/auth/logout`, {
+      ...authFetchOptions(),
+      method: 'POST'
+    })
+    .then(r => {
+      if (!r.ok) throw new Error('Logout failed');
+      return r.json();
+    })
+    .then(() => {
+      // Remove token from localStorage
+      localStorage.removeItem('token');
+      // Redirect to login page
+      window.location.href = '../Auth/login.html';
+    })
+    .catch(err => {
+      console.error('Error during logout:', err);
+      // Even if API call fails, remove token and redirect
+      localStorage.removeItem('token');
+      window.location.href = '../Auth/login.html';
+    });
+  }
+};
+
+// Check authentication on page load
+function checkAuth() {
+  const token = getAuthToken();
+  if (!token) {
+    window.location.href = '../Auth/login.html';
+    return;
+  }
+  
+  // Verify token is valid by checking user info
+  fetch(`${API_BASE}/auth/me`, authFetchOptions())
+    .then(r => {
+      if (!r.ok) {
+        throw new Error('Invalid token');
+      }
+      return r.json();
+    })
+    .then(data => {
+      if (data.user.role !== 'recruiter') {
+        alert('Access denied. Recruiter role required.');
+        localStorage.removeItem('token');
+        window.location.href = '../Auth/login.html';
+      }
+    })
+    .catch(err => {
+      console.error('Auth check failed:', err);
+      localStorage.removeItem('token');
+      window.location.href = '../Auth/login.html';
+    });
+}
 
 document.getElementById("jobForm").addEventListener("submit", async (e) => {
   e.preventDefault();
 
   const job = {
     title: document.getElementById("title").value,
+    company: document.getElementById("company")?.value || 'Company Name', // Add company field if needed
     location: document.getElementById("location").value,
     salary: document.getElementById("salary").value,
     type: document.getElementById("type").value,
     description: document.getElementById("description").value
   };
 
-  const res = await fetch(API_BASE + "/jobs", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(job)
-  });
+  // Validate required fields
+  if (!job.title || !job.location) {
+    const msgEl = document.getElementById("msg");
+    msgEl.textContent = "Title and location are required!";
+    msgEl.style.color = "red";
+    return;
+  }
 
-  const data = await res.json();
+  try {
+    const res = await fetch(API_BASE + "/recruiter/jobs", {
+      ...authFetchOptions(),
+      method: "POST",
+      body: JSON.stringify(job)
+    });
 
-  document.getElementById("msg").textContent = data.message || "Job Posted!";
-  document.getElementById("msg").style.color = "lightgreen";
+    const data = await res.json();
+
+    if (res.ok) {
+      const msgEl = document.getElementById("msg");
+      msgEl.textContent = "Job posted successfully!";
+      msgEl.style.color = "lightgreen";
+      
+      // Reset form
+      document.getElementById("jobForm").reset();
+      
+      // Redirect to my jobs after 2 seconds
+      setTimeout(() => {
+        window.location.href = "my-jobs.html";
+      }, 2000);
+    } else {
+      throw new Error(data.error || 'Failed to post job');
+    }
+  } catch (error) {
+    console.error('Error posting job:', error);
+    const msgEl = document.getElementById("msg");
+    msgEl.textContent = error.message || "Failed to post job. Please try again.";
+    msgEl.style.color = "red";
+  }
 });
+
+// Run auth check when page loads
+checkAuth();
