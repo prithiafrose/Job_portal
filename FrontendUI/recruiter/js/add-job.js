@@ -56,5 +56,35 @@ window.addEventListener('load', () => {
   const token = getToken();
   if (!token) {
     window.location.href = '../Auth/login.html';
+    return;
   }
+
+  // Verify token and role
+  fetch(API_BASE + '/auth/me', {
+    headers: {
+      'Authorization': `Bearer ${token}`
+    }
+  })
+  .then(r => {
+    if (!r.ok) {
+      if (r.status === 401) {
+        localStorage.removeItem('token');
+        window.location.href = '../Auth/login.html';
+      }
+      throw new Error('Authentication failed');
+    }
+    return r.json();
+  })
+  .then(data => {
+    if (!data.user || data.user.role !== 'recruiter') {
+      alert('Access denied. Recruiter role required.');
+      localStorage.removeItem('token');
+      window.location.href = '../Auth/login.html';
+    }
+  })
+  .catch(err => {
+    console.error('Error checking authentication:', err);
+    localStorage.removeItem('token');
+    window.location.href = '../Auth/login.html';
+  });
 });

@@ -14,7 +14,16 @@ if (document.getElementById("totalJobs")) {
   fetch(`${API}/jobs/recruiter/stats`, {
     headers: getHeaders()
   })
-    .then(r => r.json())
+    .then(r => {
+      if (!r.ok) {
+        if (r.status === 401 || r.status === 403) {
+          localStorage.removeItem('token');
+          window.location.href = '../Auth/login.html';
+        }
+        throw new Error('Authentication failed');
+      }
+      return r.json();
+    })
     .then(d => {
       document.getElementById("totalJobs").textContent = d.totalJobs || 0;
       document.getElementById("totalApplicants").textContent = d.totalApplicants || 0;
@@ -31,7 +40,16 @@ if (document.getElementById("applicantsTable")) {
   fetch(`${API}/applications/recruiter`, {
     headers: getHeaders()
   })
-    .then(r => r.json())
+    .then(r => {
+      if (!r.ok) {
+        if (r.status === 401 || r.status === 403) {
+          localStorage.removeItem('token');
+          window.location.href = '../Auth/login.html';
+        }
+        throw new Error('Authentication failed');
+      }
+      return r.json();
+    })
     .then(data => {
       if (data.applications && data.applications.length > 0) {
         document.getElementById("applicantsTable").innerHTML = data.applications.map(app => `
@@ -60,7 +78,16 @@ if (document.getElementById("jobList")) {
   fetch(`${API}/jobs/recruiter`, {
     headers: getHeaders()
   })
-    .then(r => r.json())
+    .then(r => {
+      if (!r.ok) {
+        if (r.status === 401 || r.status === 403) {
+          localStorage.removeItem('token');
+          window.location.href = '../Auth/login.html';
+        }
+        throw new Error('Authentication failed');
+      }
+      return r.json();
+    })
     .then(data => {
       if (data.jobs && data.jobs.length > 0) {
         document.getElementById("jobList").innerHTML = data.jobs.map(job => `

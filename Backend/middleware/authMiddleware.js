@@ -16,6 +16,16 @@ export const authMiddleware = (req, res, next) => {
     req.user = decoded;
     next();
   } catch (err) {
+    console.error('Token verification failed:', err.message);
     return res.status(401).json({ error: "Invalid token" });
   }
+};
+
+export const recruiterAuth = (req, res, next) => {
+  authMiddleware(req, res, () => {
+    if (req.user.role !== 'recruiter') {
+      return res.status(403).json({ error: "Access denied. Recruiter role required." });
+    }
+    next();
+  });
 };

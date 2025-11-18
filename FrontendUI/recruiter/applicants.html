@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <meta charset="utf-8">
   <title>Applicants</title>
   <link rel="stylesheet" href="css/recruiter.css">
 </head>
@@ -60,7 +61,7 @@
     function filterApplications() {
       const status = document.getElementById('statusFilter').value;
       const rows = document.querySelectorAll('#applicantsTable tr');
-      
+
       rows.forEach(row => {
         if (status === '') {
           row.style.display = '';
@@ -77,7 +78,7 @@
 
     function updateApplicationStatus(applicationId, newStatus) {
       const token = localStorage.getItem('token');
-      
+
       fetch(`http://localhost:5001/api/applications/${applicationId}/status`, {
         method: 'PUT',
         headers: {
@@ -106,7 +107,37 @@
       const token = localStorage.getItem('token');
       if (!token) {
         window.location.href = '../Auth/login.html';
+        return;
       }
+
+      // Verify token and role
+      fetch('http://localhost:5001/api/auth/me', {
+        headers: {
+          'Authorization': `Bearer ${token}`
+        }
+      })
+      .then(r => {
+        if (!r.ok) {
+          if (r.status === 401) {
+            localStorage.removeItem('token');
+            window.location.href = '../Auth/login.html';
+          }
+          throw new Error('Authentication failed');
+        }
+        return r.json();
+      })
+      .then(data => {
+        if (!data.user || data.user.role !== 'recruiter') {
+          alert('Access denied. Recruiter role required.');
+          localStorage.removeItem('token');
+          window.location.href = '../Auth/login.html';
+        }
+      })
+      .catch(err => {
+        console.error('Error checking authentication:', err);
+        localStorage.removeItem('token');
+        window.location.href = '../Auth/login.html';
+      });
     });
   </script>
 </body>

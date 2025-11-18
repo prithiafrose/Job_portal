@@ -4,7 +4,7 @@ const token = localStorage.getItem("token");
 if (!token) window.location.href = "login.html";
 
 async function getUser() {
-  const res = await fetch("http://localhost:5000/api/recruiter/me", {
+  const res = await fetch("http://localhost:5001/api/recruiter/me", {
     headers: { Authorization: `Bearer ${token}` }
   });
   if (res.ok) {

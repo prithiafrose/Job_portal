@@ -52,22 +52,43 @@
 
   <script src="js/recruiter.js"></script>
   <script>
-    // Load recruiter info
+    // Check authentication first
     const token = localStorage.getItem('token');
-    if (token) {
-      fetch('http://localhost:5001/api/auth/me', {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      })
-      .then(r => r.json())
-      .then(data => {
-        if (data.user) {
-          document.getElementById('recruiterName').textContent = data.user.username;
-        }
-      })
-      .catch(err => console.error('Error loading user info:', err));
+    if (!token) {
+      window.location.href = '../Auth/login.html';
+      return;
     }
+
+    // Load recruiter info
+    fetch('http://localhost:5001/api/auth/me', {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    })
+    .then(r => {
+      if (!r.ok) {
+        if (r.status === 401) {
+          localStorage.removeItem('token');
+          window.location.href = '../Auth/login.html';
+        }
+        throw new Error('Authentication failed');
+      }
+      return r.json();
+    })
+    .then(data => {
+      if (data.user && data.user.role === 'recruiter') {
+        document.getElementById('recruiterName').textContent = data.user.username;
+      } else {
+        alert('Access denied. Recruiter role required.');
+        localStorage.removeItem('token');
+        window.location.href = '../Auth/login.html';
+      }
+    })
+    .catch(err => {
+      console.error('Error loading user info:', err);
+      localStorage.removeItem('token');
+      window.location.href = '../Auth/login.html';
+    });
 
     // Logout function
     function logout() {
@@ -81,14 +102,23 @@
         'Authorization': `Bearer ${token}`
       }
     })
-    .then(r => r.json())
+    .then(r => {
+      if (!r.ok) {
+        if (r.status === 401 || r.status === 403) {
+          localStorage.removeItem('token');
+          window.location.href = '../Auth/login.html';
+        }
+        throw new Error('Authentication failed');
+      }
+      return r.json();
+    })
     .then(data => {
       const container = document.getElementById('recentApplications');
       if (data.applications && data.applications.length > 0) {
         container.innerHTML = data.applications.map(app => `
           <div class="application-item">
-            <strong>${app.student_name}</strong> applied for <strong>${app.job_title}</strong>
-            <span class="status ${app.status}">${app.status}</span>
+            <strong>${app.User ? app.User.username : 'N/A'}</strong> applied for <strong>${app.Job ? app.Job.job_position : 'N/A'}</strong>
+            <span class="status ${app.status || 'pending'}">${app.status || 'pending'}</span>
           </div>
         `).join('');
       } else {

@@ -1,9 +1,13 @@
-const express = require('express');
+import express from "express";
+import { authMiddleware } from "../middleware/authMiddleware.js";
+import { apply, getForJob, getRecruiterApplications, getRecentApplications, updateApplicationStatus } from "../controllers/applicationsController.js";
+
 const router = express.Router();
-const appCtrl = require('../controllers/applicationsController');
-const { authMiddleware } = require('../middleware/authMiddleware');
 
-router.post('/', authMiddleware, appCtrl.apply);
-router.get('/job/:jobId', authMiddleware, appCtrl.getForJob);
+router.post('/', authMiddleware, apply);
+router.get('/job/:jobId', authMiddleware, getForJob);
+router.get('/recruiter', authMiddleware, getRecruiterApplications);
+router.get('/recruiter/recent', authMiddleware, getRecentApplications);
+router.put('/:id/status', authMiddleware, updateApplicationStatus);
 
-module.exports = router;
+export default router;
