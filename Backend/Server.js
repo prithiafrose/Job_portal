@@ -11,6 +11,7 @@ const jobRoutes = require("./routes/jobs.js");
 const recruiterRoutes = require("./routes/recruiter.js");
 const applicationsRoutes = require("./routes/applications.js");
 const paymentRoutes = require("./routes/payment.js");
+const adminRoutes = require("./routes/admin.js");
 const path = require("path");
 
 
@@ -38,6 +39,7 @@ app.use("/jobs", jobRoutes);
 app.use("/api/recruiter", recruiterRoutes);
 app.use("/apply-job", applicationsRoutes);
 app.use("/api/payment", paymentRoutes);
+app.use("/admin", adminRoutes);
 
 // Start server after syncing DB
 const PORT = process.env.PORT || 5001;
