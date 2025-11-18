@@ -13,7 +13,7 @@ let jobsData = [];
 // Fetch jobs from backend
 async function fetchJobs(page = 1) {
   try {
-const res = await fetch(`http://localhost:5001/jobs?page=${page}`);
+    const res = await fetch(`http://localhost:5001/jobs?page=${page}`);
     const data = await res.json();
     jobsData = data.jobs;
     totalPages = data.totalPages;
@@ -30,9 +30,18 @@ function renderJobs() {
   const filteredJobs = jobsData.filter(job => {
     const titleMatch = job.job_position.toLowerCase().includes(jobTitleInput.value.toLowerCase());
     const locationMatch = job.location.toLowerCase().includes(locationInput.value.toLowerCase());
-    const skillsMatch = skillsInput.value === '' || skillsInput.value.split(',').every(s => job.skills_required.includes(s.trim()));
+
+    const jobSkills = Array.isArray(job.skills_required)
+      ? job.skills_required.map(s => s.toLowerCase())
+      : job.skills_required.split(',').map(s => s.trim().toLowerCase());
+
+    const skillsMatch = skillsInput.value === '' || skillsInput.value
+      .split(',')
+      .every(s => jobSkills.includes(s.trim().toLowerCase()));
+
     const minSalaryMatch = minSalaryInput.value === '' || job.monthly_salary >= parseInt(minSalaryInput.value);
     const maxSalaryMatch = maxSalaryInput.value === '' || job.monthly_salary <= parseInt(maxSalaryInput.value);
+
     return titleMatch && locationMatch && skillsMatch && minSalaryMatch && maxSalaryMatch;
   });
 
@@ -67,21 +76,27 @@ function goToPage(page) {
   fetchJobs(page);
 }
 
-// Apply filters
-document.getElementById('applyFilters').addEventListener('click', renderJobs);
+// Filter and clear button listeners (once)
+document.getElementById('applyFilters').addEventListener('click', () => {
+  currentPage = 1;
+  renderJobs();
+  renderPagination();
+});
+
 document.getElementById('clearFilters').addEventListener('click', () => {
   jobTitleInput.value = '';
   locationInput.value = '';
   skillsInput.value = '';
   minSalaryInput.value = '';
   maxSalaryInput.value = '';
+  currentPage = 1;
   renderJobs();
+  renderPagination();
 });
 
-// View job details (just alert for now)
+// View job details
 function viewJob(id) {
-  const job = jobsData.find(j => j.id === id);
-  alert(`Job: ${job.job_position}\nCompany: ${job.company_name}\nLocation: ${job.location}`);
+  window.location.href = `/pages/job-details.html?id=${id}`;
 }
 
 // Initial fetch
