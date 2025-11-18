@@ -29,10 +29,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
       error.textContent = "";
       loading.textContent = "Loading...";
+        const selectedRole = loginForm.querySelector('input[name="role"]:checked');
+    const role = selectedRole ? selectedRole.value : "student";
 
       const formData = {
         email: loginForm.email.value.trim(),
         password: loginForm.password.value.trim(),
+        role: role,
       };
 
       try {
