@@ -36,7 +36,7 @@ document.addEventListener("DOMContentLoaded", () => {
       };
 
       try {
-        const res = await fetch(`${API_BASE}/login`, {
+        const res = await fetch(`${API_BASE}/login`, {  // ✅ fixed syntax
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(formData),
@@ -88,7 +88,7 @@ document.addEventListener("DOMContentLoaded", () => {
       };
 
       try {
-        const res = await fetch(`${API_BASE}/register`, {
+        const res = await fetch(`${API_BASE}/register`, {  // ✅ fixed syntax
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(formData),

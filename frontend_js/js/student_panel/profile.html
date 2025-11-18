@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Profile</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Profile Photo Section -->
+  <div class="profile-photo">
+    <img id="profileImage" src="picture/programmer.png" alt="Profile Photo"
+         style="width:150px; height:150px; border-radius:50%; object-fit:cover;">
+    <input type="file" id="uploadPhoto" accept="image/*">
+  </div>
+
+  <!-- Sidebar -->
+  <div class="sidebar">
+    <a href="dashboard.html">Dashboard</a>
+    <a href="job-list.html">Jobs</a>
+    <a href="applied-jobs.html">Applied Jobs</a>
+    <a href="profile.html">Profile</a>
+  </div>
+
+  <!-- Main content -->
+  <div class="main-content">
+    <h1>My Profile</h1>
+
+    <div class="card">
+      <h3>Personal Information</h3>
+      <input type="text" placeholder="Full Name">
+      <input type="email" placeholder="Email">
+      <input type="text" placeholder="Phone">
+      <input type="text" placeholder="Skills">
+      <button class="btn" id="updateProfileBtn">Update Profile</button>
+    </div>
+  </div>c
+
+  <script src="profile.js"></script>
+</body>
+</html>

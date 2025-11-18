@@ -23,10 +23,16 @@ function setAuthUI() {
   const token = localStorage.getItem('token');
   if (token) {
     const userJson = localStorage.getItem('user');
-    const name = userJson ? JSON.parse(userJson).username : 'Account';
+    const name = userJson ? escapeHTML(JSON.parse(userJson).username) : 'Account';
+
     link.textContent = `Hi, ${name}`;
     link.href = '#';
-    link.addEventListener('click', (e) => {
+
+    // Remove old listeners and add logout
+    const newLink = link.cloneNode(true);
+    link.replaceWith(newLink);
+
+    newLink.addEventListener('click', (e) => {
       e.preventDefault();
       if (confirm('Logout?')) {
         localStorage.removeItem('token');
@@ -36,8 +42,10 @@ function setAuthUI() {
     });
   } else {
     link.textContent = 'Login';
+
     link.href = '/FrontendUI/Auth/login.html';
-  }
+
 }
 
 document.addEventListener('DOMContentLoaded', setAuthUI);
+}
