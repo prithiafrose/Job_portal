@@ -10,7 +10,11 @@ const Application = sequelize.define(
     job_id: { type: DataTypes.INTEGER, allowNull: false },
     user_id: { type: DataTypes.INTEGER, allowNull: false },
     cover_letter: DataTypes.TEXT,
-    resume_path: DataTypes.STRING
+    resume_path: DataTypes.STRING,
+    status: { 
+      type: DataTypes.ENUM('pending', 'reviewed', 'accepted', 'rejected'), 
+      defaultValue: 'pending' 
+    }
   },
   { tableName: "applications", timestamps: true }
 );

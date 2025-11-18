@@ -1,16 +1,36 @@
-const Job = require('../models/Job');
+import Job from '../models/Job.js';
 
 const createJob = async (req, res) => {
   try {
+    // Check if user has recruiter role
+    if (req.user.role !== 'recruiter' && req.user.role !== 'admin') {
+      return res.status(403).json({ error: 'Only recruiters can post jobs' });
+    }
+
     const { title, company, location, type, salary, description } = req.body;
+    console.log('Received job data:', { title, company, location, type, salary, description, posted_by: req.user.id });
+    
     if (!title || !company) return res.status(400).json({ error: 'Title and company required' });
 
     const posted_by = req.user.id;
-    const jobId = await Job.createJob({ title, company, location, type, salary, description, posted_by });
+    // Map to actual database field names
+    const jobData = { 
+      job_position: title, 
+      company_name: company, 
+      location, 
+      monthly_salary: parseInt(salary) || null, 
+      skills_required: JSON.stringify([]), // Empty array for skills
+      posted_by 
+    };
+    console.log('Creating job with mapped data:', jobData);
+    
+    const jobId = await Job.createJob(jobData);
+    console.log('Job created successfully with ID:', jobId);
+    
     res.json({ id: jobId });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Server error' });
+    console.error('Detailed error in createJob:', err);
+    res.status(500).json({ error: 'Server error', details: err.message });
   }
 };
 
@@ -63,4 +83,4 @@ const deleteJob = async (req, res) => {
   }
 };
 
-module.exports = { createJob, listJobs, getJob, updateJob, deleteJob };
+export { createJob, listJobs, getJob, updateJob, deleteJob };
