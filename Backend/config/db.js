@@ -5,7 +5,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const sequelize = new Sequelize(
-  process.env.DB_NAME || "job_portal",
+  process.env.DB_NAME || "job_portal_db",
   process.env.DB_USER || "root",
   process.env.DB_PASSWORD || "",
   {

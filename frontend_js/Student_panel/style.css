@@ -1,0 +1,199 @@
+/* ====== General ====== */
+body {
+  margin: 0;
+  font-family: 'Arial', sans-serif;
+  background-color: #0d1b2a; /* dark blue background */
+  color: #fff;
+}
+
+/* ====== Sidebar ====== */
+.sidebar {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 220px;
+  height: 100%;
+  background-color: #1b2a49; /* panel color */
+  display: flex;
+  flex-direction: column;
+  padding-top: 20px;
+}
+
+.sidebar a {
+  color: #64ffda;
+  padding: 15px 20px;
+  text-decoration: none;
+  margin: 5px 10px;
+  border-radius: 6px;
+  transition: all 0.3s;
+}
+
+.sidebar a:hover {
+  background-color: #0d1b2a;
+  color: #00ffab;
+  transform: translateX(5px);
+}
+
+/* ====== Main content vertical stacking ====== */
+.main-content {
+  margin-left: 240px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column; /* stack items vertically */
+  gap: 20px; /* space between cards */
+}
+
+/* ====== Cards ====== */
+.card {
+  background-color: #1b2a49;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+  transition: transform 0.3s, box-shadow 0.3s;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0,0,0,0.5);
+}
+
+/* ====== Card Inputs & Buttons ====== */
+.card input {
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #64ffda55;
+  background-color: #0d1b2a;
+  color: #fff;
+}
+
+.card input:focus {
+  outline: none;
+  border-color: #00ffab;
+}
+
+.card button {
+  align-self: flex-start; /* button stays at left */
+}
+
+/* ====== Buttons ====== */
+.btn {
+  background-color: #64ffda;
+  color: #0d1b2a;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.btn:hover {
+  background-color: #00ffab;
+  transform: scale(1.05);
+}
+
+/* ====== Tables ====== */
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+table th, table td {
+  padding: 10px;
+  border-bottom: 1px solid #64ffda33;
+  text-align: left;
+}
+
+table th {
+  background-color: #0d1b2a;
+  color: #64ffda;
+}
+
+table tr:hover {
+  background-color: #0d1b2a77;
+}
+
+/* ====== Responsive Sidebar ====== */
+@media (max-width: 768px) {
+  .sidebar {
+    width: 60px;
+  }
+
+  .sidebar a {
+    font-size: 0;
+    padding: 15px 5px;
+  }
+
+  .main-content {
+    margin-left: 60px;
+    padding: 15px;
+  }
+}
+
+/* ====== Profile photo ====== */
+.profile-photo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
+  gap: 10px;
+}
+
+.profile-photo img {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 3px solid #64ffda;
+  transition: transform 0.3s ease;
+}
+
+.profile-photo img:hover {
+  transform: scale(1.05);
+}
+
+.profile-photo input[type="file"] {
+  background-color: #1b2a49;
+  color: #64ffda;
+  border: 1px solid #64ffda;
+  padding: 5px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.profile-photo input[type="file"]:hover {
+  background-color: #0d1b2a;
+}
+
+/* ====== Job Cards ====== */
+#job-list .job-card {
+  background-color: #1b2a49;
+  color: #fff;
+  border-radius: 10px;
+  padding: 15px;
+  margin-bottom: 15px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+  transition: transform 0.3s, box-shadow 0.3s;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+#job-list .job-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 16px rgba(0,0,0,0.5);
+}
+
+#job-list .job-card a {
+  color: #64ffda;
+  text-decoration: none;
+  transition: color 0.3s;
+}
+
+#job-list .job-card a:hover {
+  color: #00ffab;
+}
