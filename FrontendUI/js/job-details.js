@@ -70,11 +70,18 @@ function showError(message) {
 // Apply for job
 applyBtn.addEventListener("click", () => {
   const token = localStorage.getItem("token");
+  const user = JSON.parse(localStorage.getItem("user") || "{}");
 
   if (!token) {
     // Store the intended destination for redirect after login
-    localStorage.setItem("redirectAfterLogin", window.location.href);
-    window.location.href = "/FrontendUI/Auth/login.html";
+    localStorage.setItem("redirectAfterLogin", `../apply-job.html?id=${jobId}`);
+    window.location.href = "Auth/login.html";
+    return;
+  }
+
+  // Check if user is a student
+  if (user.role !== "student") {
+    alert("Only students can apply for jobs.");
     return;
   }
 

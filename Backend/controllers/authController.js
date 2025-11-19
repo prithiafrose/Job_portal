@@ -3,9 +3,19 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const dotenv = require("dotenv");
 const emailValidator = require("deep-email-validator");
+const nodemailer = require("nodemailer");
 const User = require("../models/User");
 
 dotenv.config();
+
+// Configure Nodemailer
+const transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+    user: process.env.EMAIL_USER,
+    pass: process.env.EMAIL_PASS,
+  },
+});
 
 // Helper function to validate email
 async function isEmailValid(email) {
@@ -139,4 +149,78 @@ const checkEmailExistence = async (req, res) => {
   }
 };
 
-module.exports = { register, login, me, logout, checkEmailExistence };
+const forgotPassword = async (req, res) => {
+  try {
+    const { email } = req.body;
+    if (!email) return res.status(400).json({ error: "Email is required" });
+
+    const user = await User.findOne({ where: { email } });
+    if (!user) return res.status(404).json({ error: "Invalid Email Address" });
+
+    // Generate 6-digit code
+    const resetToken = Math.floor(100000 + Math.random() * 900000).toString();
+    const resetExpires = Date.now() + 3600000; // 1 hour
+
+    user.resetPasswordToken = resetToken;
+    user.resetPasswordExpires = resetExpires;
+    await user.save();
+
+    const mailOptions = {
+      from: process.env.EMAIL_USER,
+      to: email,
+      subject: "Password Reset Code - JobPortal",
+      text: `Your password reset code is: ${resetToken}`,
+    };
+
+    // Attempt to send email
+    try {
+      if (process.env.EMAIL_USER && process.env.EMAIL_PASS) {
+        await transporter.sendMail(mailOptions);
+        res.json({ message: "Reset code sent to email" });
+      } else {
+        console.warn("Email credentials not found. Printing token to console.");
+        console.log(`[DEV] Reset Token for ${email}: ${resetToken}`);
+        res.json({ message: "Reset code generated (check console for dev mode)" });
+      }
+    } catch (emailErr) {
+      console.error("Email send error:", emailErr);
+      // Fallback for dev
+      console.log(`[DEV] Reset Token for ${email}: ${resetToken}`);
+      res.json({ message: "Reset code generated (check console)" });
+    }
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Server error" });
+  }
+};
+
+const resetPassword = async (req, res) => {
+  try {
+    const { email, code, newPassword } = req.body;
+    if (!email || !code || !newPassword) 
+      return res.status(400).json({ error: "All fields are required" });
+
+    const user = await User.findOne({ where: { email, resetPasswordToken: code } });
+    
+    if (!user) return res.status(400).json({ error: "Invalid code or email" });
+    
+    if (user.resetPasswordExpires < Date.now()) {
+       return res.status(400).json({ error: "Code expired" });
+    }
+
+    const passwordHash = await bcrypt.hash(newPassword, 10);
+    user.password = passwordHash;
+    user.resetPasswordToken = null;
+    user.resetPasswordExpires = null;
+    await user.save();
+
+    res.json({ message: "Password reset successful" });
+
+  } catch (err) {
+       console.error(err);
+      res.status(500).json({ error: "Server error" });
+  }
+};
+
+module.exports = { register, login, me, logout, checkEmailExistence, forgotPassword, resetPassword };

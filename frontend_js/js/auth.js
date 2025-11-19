@@ -73,8 +73,14 @@ document.addEventListener("DOMContentLoaded", () => {
           const redirectUrl = localStorage.getItem("redirectAfterLogin");
           if (redirectUrl) {
             localStorage.removeItem("redirectAfterLogin");
-            window.location.href = redirectUrl;
-            return;
+
+            // Safety check: If redirecting to job application, ensure user is student
+            if (redirectUrl.includes("apply-job") && userRole !== "student") {
+              // Do nothing, fall through to default redirect
+            } else {
+              window.location.href = redirectUrl;
+              return;
+            }
           }
 
           // Default role-based redirects
@@ -185,8 +191,14 @@ const userRole = data.user.role;
           const redirectUrl = localStorage.getItem("redirectAfterLogin");
           if (redirectUrl) {
             localStorage.removeItem("redirectAfterLogin");
-            window.location.href = redirectUrl;
-            return;
+
+            // Safety check: If redirecting to job application, ensure user is student
+            if (redirectUrl.includes("apply-job") && userRole !== "student") {
+              // Do nothing, fall through to default redirect
+            } else {
+              window.location.href = redirectUrl;
+              return;
+            }
           }
 
           // Default role-based redirects
@@ -207,4 +219,81 @@ const userRole = data.user.role;
       }
     });
   }
+
+  // ==================== FORGOT PASSWORD ====================
+  const emailForm = document.getElementById("emailForm");
+  const resetForm = document.getElementById("resetForm");
+
+  if (emailForm && resetForm) {
+    // Handle Toggle Password for Reset Form
+    togglePassword("showResetPassword", "fpNewPassword");
+
+    emailForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const error = document.getElementById("fpError");
+      const success = document.getElementById("fpSuccess");
+      const loading = document.getElementById("fpLoading");
+      const email = document.getElementById("fpEmail").value.trim();
+
+      error.textContent = "";
+      success.textContent = "";
+      loading.textContent = "Sending code...";
+
+      try {
+        const res = await fetch(`${API_BASE}/forgot-password`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email }),
+        });
+        const data = await res.json();
+        loading.textContent = "";
+
+        if (!res.ok) throw new Error(data.error || "Failed to send code");
+
+        success.textContent = data.message;
+        // Switch forms
+        emailForm.classList.add("hidden");
+        resetForm.classList.remove("hidden");
+      } catch (err) {
+        loading.textContent = "";
+        error.textContent = err.message;
+      }
+    });
+
+    resetForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const error = document.getElementById("fpError");
+      const success = document.getElementById("fpSuccess");
+      const loading = document.getElementById("fpLoading");
+
+      const email = document.getElementById("fpEmail").value.trim(); // Get from previous step
+      const code = document.getElementById("fpCode").value.trim();
+      const newPassword = document.getElementById("fpNewPassword").value.trim();
+
+      error.textContent = "";
+      success.textContent = "";
+      loading.textContent = "Resetting password...";
+
+      try {
+        const res = await fetch(`${API_BASE}/reset-password`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, code, newPassword }),
+        });
+        const data = await res.json();
+        loading.textContent = "";
+
+        if (!res.ok) throw new Error(data.error || "Failed to reset password");
+
+        success.textContent = "Password reset successful! Redirecting to login...";
+        setTimeout(() => {
+          window.location.href = "login.html";
+        }, 2000);
+      } catch (err) {
+        loading.textContent = "";
+        error.textContent = err.message;
+      }
+    });
+  }
 });
+

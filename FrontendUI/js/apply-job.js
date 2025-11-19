@@ -21,12 +21,12 @@ function checkAuthentication() {
   if (!token) {
     // Not logged in, redirect to login with return URL
     const returnUrl = encodeURIComponent(window.location.href);
-    window.location.href = `/FrontendUI/Auth/login.html?redirect=${returnUrl}`;
+    window.location.href = `Auth/login.html?redirect=${returnUrl}`;
     return false;
   }
   
   // Check if user is registered as student
-  if (user.user_type !== "student") {
+  if (user.role !== "student") {
     alert("Only students can apply for jobs. Please register as a student.");
     window.location.href = `/FrontendUI/Auth/Register.html?redirect=${encodeURIComponent(window.location.href)}`;
     return false;
@@ -293,12 +293,12 @@ applicationForm.addEventListener("submit", async (e) => {
       
       const paymentData = await paymentRes.json();
       
-      if (paymentRes.ok) {
+    if (paymentRes.ok) {
         alert("Application submitted successfully! Payment processed.");
-        window.location.href = `/FrontendUI/admin/job-details.html?id=${jobId}`;
+        window.location.href = `/FrontendUI/job-details.html?id=${jobId}`;
       } else {
         alert("Application submitted but payment failed. Please contact support.");
-        window.location.href = `/FrontendUI/admin/job-details.html?id=${jobId}`;
+        window.location.href = `/FrontendUI/job-details.html?id=${jobId}`;
       }
     } else {
       throw new Error(appData.error || "Failed to submit application");
