@@ -6,7 +6,7 @@ const storage = new CloudinaryStorage({
   cloudinary,
   params: {
     folder: "job_portal",
-    allowed_formats: ["jpg", "jpeg", "png"],
+    resource_type: "auto",
   },
 });
 
