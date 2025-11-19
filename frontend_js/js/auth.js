@@ -64,8 +64,6 @@ document.addEventListener("DOMContentLoaded", () => {
   window.location.href = "/FrontendUI/admin/dashboard.html";
 } else if (userRole === 'student') {
   window.location.href = "/frontend_js/Student_panel/dashboard.html";
-} else if (userRole === 'recruiter') {
-  window.location.href = "/FrontendUI/recruiter/dashboard.html";
 } else {
   alert("Invalid role returned from server!");
 }

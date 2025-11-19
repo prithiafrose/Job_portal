@@ -6,10 +6,7 @@ import dotenv from "dotenv";
 import authRoutes from "./routes/auth.js";
 import sequelize from "./config/db.js";
 import uploadRoutes from "./routes/upload.js";
-import Job from "./models/Job.js";
-import jobRoutes from "./routes/jobs.js";
 import applicationRoutes from "./routes/applications.js";
-import recruiterRoutes from "./routes/recruiter.js";
 import adminRoutes from "./routes/admin.js";
 import profileRoutes from "./routes/profileRoutes.js";
 import { authMiddleware } from "./middleware/authMiddleware.js";
@@ -34,7 +31,6 @@ app.use("/api/auth", authRoutes);
 app.use("/api/upload", uploadRoutes);
 app.use("/api/jobs", jobRoutes);
 app.use("/api/applications", applicationRoutes);
-app.use("/api/recruiter", recruiterRoutes);
 app.use("/admin", adminRoutes);
 app.use("/api/profile", authMiddleware, profileRoutes);
 

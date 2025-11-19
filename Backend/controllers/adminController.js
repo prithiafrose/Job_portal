@@ -25,9 +25,10 @@ export const getUserStats = async (req, res) => {
 export const getJobStats = async (req, res) => {
   try {
     const totalJobs = await Job.count();
-    const activeJobs = await Job.count({ where: { status: 'active' } });
-    const pendingJobs = await Job.count({ where: { status: 'pending' } });
-    const expiredJobs = await Job.count({ where: { status: 'expired' } });
+    // Status field does not exist in schema, so returning 0/null for these
+    const activeJobs = totalJobs; // Assuming all posted jobs are active
+    const pendingJobs = 0;
+    const expiredJobs = 0;
 
     res.json({
       totalJobs,
@@ -43,9 +44,8 @@ export const getJobStats = async (req, res) => {
 
 export const getPendingApprovals = async (req, res) => {
   try {
-    const pendingCount = await Job.count({ 
-      where: { status: 'pending' } 
-    });
+    // Status field does not exist, so no pending approvals logic
+    const pendingCount = 0;
 
     res.json({
       pendingCount

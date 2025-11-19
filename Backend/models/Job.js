@@ -7,35 +7,40 @@ const Job = sequelize.define("Job", {
     primaryKey: true,
     autoIncrement: true
   },
-  job_position: { 
+  title: { 
     type: DataTypes.STRING, 
     allowNull: false,
-    field: 'job_position'
+    field: 'title'
   },
-  company_name: { 
+  company: { 
     type: DataTypes.STRING, 
     allowNull: false,
-    field: 'company_name'
+    field: 'company'
   },
   location: { 
     type: DataTypes.STRING, 
     allowNull: false,
     field: 'location'
   },
-  monthly_salary: { 
-    type: DataTypes.INTEGER, 
-    allowNull: false,
-    field: 'monthly_salary'
-  },
-  skills_required: { 
-    type: DataTypes.TEXT, 
-    allowNull: false,
-    field: 'skills_required'
-  },
-  logo_url: { 
+  type: { 
     type: DataTypes.STRING, 
     allowNull: true,
-    field: 'logo_url'
+    field: 'type'
+  },
+  salary: { 
+    type: DataTypes.STRING, 
+    allowNull: true,
+    field: 'salary'
+  },
+  description: { 
+    type: DataTypes.TEXT, 
+    allowNull: true,
+    field: 'description'
+  },
+  skills: {
+    type: DataTypes.TEXT,
+    allowNull: true,
+    field: 'skills'
   },
   posted_by: { 
     type: DataTypes.INTEGER, 
@@ -44,7 +49,9 @@ const Job = sequelize.define("Job", {
   }
 }, {
   tableName: 'jobs',
-  timestamps: true // This will use createdAt and updatedAt
+  timestamps: true, // This will use createdAt and updatedAt
+  createdAt: 'created_at',
+  updatedAt: false // Schema does not have updated_at
 });
 
 // Static method to create job
@@ -83,7 +90,7 @@ Job.searchJobs = async function({ query, page, limit, filters }) {
     where: whereClause,
     limit,
     offset,
-    order: [['createdAt', 'DESC']]
+    order: [['created_at', 'DESC']]
   });
 
   return { jobs: rows, total: count };

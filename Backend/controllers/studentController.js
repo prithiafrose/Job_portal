@@ -5,9 +5,11 @@ import Application from '../models/Application.js';
 import Job from '../models/Job.js';
 import User from '../models/User.js';
 
+// Setup upload directory
 const uploadsDir = path.join(process.cwd(), 'uploads');
 if (!fs.existsSync(uploadsDir)) fs.mkdirSync(uploadsDir, { recursive: true });
 
+// Setup Multer storage
 const storage = multer.diskStorage({
   destination: (req, file, cb) => cb(null, uploadsDir),
   filename: (req, file, cb) => {
@@ -17,7 +19,7 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage, limits: { fileSize: 5 * 1024 * 1024 } }); // 5MB
 
-const apply = [
+export const applyForJob = [
   upload.single('resume'),
   async (req, res) => {
     try {
@@ -50,7 +52,28 @@ const apply = [
   }
 ];
 
-const getForJob = async (req, res) => {
+export const getMyApplications = async (req, res) => {
+  try {
+    const user_id = req.user.id;
+    const apps = await Application.findAll({
+      where: { user_id },
+      include: [
+        { 
+          model: Job, 
+          // FIXED: Updated field names to match database schema
+          attributes: ['id', 'title', 'company', 'location', 'type', 'salary'] 
+        }
+      ],
+      order: [['createdAt', 'DESC']]
+    });
+    res.json({ applications: apps });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Server error' });
+  }
+};
+
+export const getForJob = async (req, res) => {
   try {
     const job_id = req.params.jobId;
     // Ideally check if req.user is the recruiter who posted this job
@@ -66,22 +89,3 @@ const getForJob = async (req, res) => {
     res.status(500).json({ error: 'Server error' });
   }
 };
-
-const getMyApplications = async (req, res) => {
-  try {
-    const user_id = req.user.id;
-    const apps = await Application.findAll({
-      where: { user_id },
-      include: [
-        { model: Job, attributes: ['id', 'job_position', 'company_name', 'location'] }
-      ],
-      order: [['createdAt', 'DESC']]
-    });
-    res.json({ applications: apps });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Server error' });
-  }
-};
-
-export { apply, getForJob, getMyApplications };
