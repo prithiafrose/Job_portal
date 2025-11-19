@@ -21,32 +21,23 @@
     <h1>Applied Jobs</h1>
 
     <div class="card">
-      <table>
+      <table style="width: 100%; border-collapse: collapse;">
         <thead>
-          <tr>
-            <th>Job Title</th>
-            <th>Company</th>
-            <th>Location</th>
-            <th>Status</th>
+          <tr style="text-align: left; background-color: #f4f4f4;">
+            <th style="padding: 10px;">Job Title</th>
+            <th style="padding: 10px;">Company</th>
+            <th style="padding: 10px;">Location</th>
+            <th style="padding: 10px;">Status</th>
           </tr>
         </thead>
-        <tbody>
-          <tr>
-            <td>Frontend Developer</td>
-            <td>ABC Ltd.</td>
-            <td>Dhaka</td>
-            <td>Applied</td>
-          </tr>
-          <tr>
-            <td>Backend Developer</td>
-            <td>XYZ Corp.</td>
-            <td>Chittagong</td>
-            <td>Interview Scheduled</td>
-          </tr>
+        <tbody id="applied-jobs-body">
+          <!-- Loaded dynamically -->
+          <tr><td colspan="4">Loading applications...</td></tr>
         </tbody>
       </table>
     </div>
   </div>
 
+  <script src="main.js"></script>
 </body>
 </html>

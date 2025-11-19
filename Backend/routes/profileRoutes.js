@@ -6,24 +6,37 @@ const router = express.Router();
 
 // GET PROFILE
 router.get("/", async (req, res) => {
-  const admin = await User.findOne({ where: { role: "admin" } });
-
-  res.json(admin);
+  try {
+    const user = await User.findByPk(req.user.id, {
+      attributes: { exclude: ['password'] }
+    });
+    if (!user) return res.status(404).json({ error: "User not found" });
+    res.json(user);
+  } catch (err) {
+    res.status(500).json({ error: "Server error" });
+  }
 });
 
 // UPDATE PROFILE
 router.put("/", async (req, res) => {
-  const { username, email, mobile } = req.body;
+  try {
+    const { username, email, mobile, skills } = req.body;
+    const user = await User.findByPk(req.user.id);
 
-  const admin = await User.findOne({ where: { role: "admin" } });
+    if (!user) return res.status(404).json({ error: "User not found" });
 
-  admin.username = username;
-  admin.email = email;
-  admin.mobile = mobile;
-
-  await admin.save();
-
-  res.json({ message: "Profile updated successfully" });
+    if (username) user.username = username;
+    if (email) user.email = email;
+    if (mobile) user.mobile = mobile;
+    // Assuming there is a skills column or similar. If not, we might need to check the model.
+    // The user model might need update if skills are not there.
+    // Let's check User model first.
+    
+    await user.save();
+    res.json({ message: "Profile updated successfully", user });
+  } catch (err) {
+    res.status(500).json({ error: "Server error" });
+  }
 });
 
 // CHANGE PASSWORD
