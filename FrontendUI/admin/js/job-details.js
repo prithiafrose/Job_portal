@@ -1,3 +1,6 @@
+// Full backend URL
+const API = "http://localhost:5001/api";
+
 // Get job ID from URL
 const urlParams = new URLSearchParams(window.location.search);
 const jobId = urlParams.get("id");
@@ -9,87 +12,123 @@ const locationEl = document.getElementById("location");
 const salaryEl = document.getElementById("salary");
 const skillsEl = document.getElementById("skills");
 const descriptionEl = document.getElementById("description");
-const actionContainer = document.querySelector(".job-details-container"); // We will append buttons here
+const actionContainer = document.querySelector(".job-details-container");
+const applyBtn = document.getElementById("applyBtn");
 
-async function fetchJobDetails() {
+// Fetch helper with auth
+async function fetchWithAuth(endpoint, options = {}) {
+  const token = localStorage.getItem("token");
+  const headers = { "Content-Type": "application/json", ...options.headers };
+  if (token) headers["Authorization"] = `Bearer ${token}`;
+  const res = await fetch(API + endpoint, { ...options, headers });
+  return res;
+}
+
+// Check user role
+function getUserRole() {
   try {
-    const res = await fetchWithAuth(`/jobs/${jobId}`);
-    if (!res) return;
-    
-    const data = await res.json();
-    const job = data.job;
-
-    jobPosition.textContent = job.job_position;
-    companyName.textContent = job.company_name;
-    locationEl.textContent = job.location;
-    salaryEl.textContent = job.monthly_salary;
-    skillsEl.textContent = job.skills_required;
-    descriptionEl.textContent = job.skills_required; // Assuming description isn't in the model shown earlier? 
-    // Wait, the model had skills_required but the controller logs 'description'. 
-    // Let's check the response. If description is missing, it might be missing in model.
-    // Checking the model again in memory... Job model didn't have description! 
-    // That's a backend bug I noticed earlier in the controller log vs model.
-    // For now let's just display what we have.
-    
-    // Add Action Buttons (Approve / Reject)
-    const btnContainer = document.createElement("div");
-    btnContainer.style.marginTop = "20px";
-
-    if (job.status === 'pending') {
-        const approveBtn = document.createElement("button");
-        approveBtn.textContent = "Approve";
-        approveBtn.className = "btn";
-        approveBtn.style.backgroundColor = "#28a745";
-        approveBtn.style.marginRight = "10px";
-        approveBtn.onclick = () => updateStatus('active');
-
-        const rejectBtn = document.createElement("button");
-        rejectBtn.textContent = "Reject";
-        rejectBtn.className = "btn";
-        rejectBtn.style.backgroundColor = "#dc3545";
-        rejectBtn.onclick = () => updateStatus('rejected');
-
-        btnContainer.appendChild(approveBtn);
-        btnContainer.appendChild(rejectBtn);
-    } else {
-        const statusMsg = document.createElement("p");
-        statusMsg.innerHTML = `<strong>Current Status:</strong> ${job.status}`;
-        btnContainer.appendChild(statusMsg);
-    }
-
-    // Remove the old "Apply Now" button if it exists in HTML
-    const oldApplyBtn = document.getElementById("applyBtn");
-    if(oldApplyBtn) oldApplyBtn.remove();
-
-    actionContainer.appendChild(btnContainer);
-
-  } catch (err) {
-    console.error("Error:", err);
+    const user = JSON.parse(localStorage.getItem("user") || "{}");
+    return user.role || "guest";
+  } catch {
+    return "guest";
   }
 }
 
-async function updateStatus(status) {
-    if(!confirm(`Mark this job as ${status}?`)) return;
+// Fetch job details
+async function fetchJobDetails() {
+  try {
+    const res = await fetchWithAuth(`/jobs/${jobId}`);
+    if (!res.ok) throw new Error("Failed to fetch job details");
 
-    try {
-        const res = await fetchWithAuth(`/jobs/${jobId}`, {
-            method: 'PUT',
-            body: JSON.stringify({ status })
-        });
+    const job = await res.json();
 
-        if (res && res.ok) {
-            alert("Status updated!");
-            location.reload();
-        } else {
-            alert("Failed to update status");
-        }
-    } catch (error) {
-        console.error(error);
+    // Fill in job details
+    jobPosition.textContent = job.title;
+    companyName.textContent = job.company;
+    locationEl.textContent = job.location || "N/A";
+    salaryEl.textContent = job.salary || "N/A";
+    skillsEl.textContent = job.skills || "N/A";
+    descriptionEl.textContent = job.description || "No description";
+
+    // Show buttons
+    const role = getUserRole();
+    if (role === "admin" || role === "recruiter") {
+      // Admin/Recruiter: show Approve/Reject if pending
+      if (job.status === "pending") {
+        applyBtn.style.display = "none"; // hide apply button
+
+        const approveBtn = document.createElement("button");
+        approveBtn.textContent = "Approve";
+        approveBtn.style.backgroundColor = "#28a745";
+        approveBtn.style.marginRight = "10px";
+        approveBtn.onclick = () => updateStatus("active");
+
+        const rejectBtn = document.createElement("button");
+        rejectBtn.textContent = "Reject";
+        rejectBtn.style.backgroundColor = "#dc3545";
+        rejectBtn.onclick = () => updateStatus("rejected");
+
+        actionContainer.appendChild(approveBtn);
+        actionContainer.appendChild(rejectBtn);
+      } else {
+        const statusMsg = document.createElement("p");
+        statusMsg.innerHTML = `<strong>Status:</strong> ${job.status || "N/A"}`;
+        actionContainer.appendChild(statusMsg);
+        applyBtn.style.display = "none";
+      }
+    } else {
+      // Normal user: show Apply button if job is active or status is undefined (default active)
+      if (!job.status || job.status === "active") {
+        applyBtn.style.display = "inline-block";
+        applyBtn.onclick = () => applyForJob(job.id);
+      } else {
+        applyBtn.style.display = "none";
+      }
     }
+
+  } catch (err) {
+    console.error("Error:", err);
+    actionContainer.innerHTML = "<p>Error loading job details.</p>";
+  }
+}
+
+// Apply for job
+function applyForJob(jobId) {
+  const token = localStorage.getItem("token");
+  const applyUrl = `/FrontendUI/apply.html?jobId=${jobId}`;
+  
+  if (!token) {
+    // Redirect to login with return URL
+    const returnUrl = encodeURIComponent(window.location.origin + applyUrl);
+    window.location.href = `/FrontendUI/Auth/login.html?redirect=${returnUrl}`;
+    return;
+  }
+
+  // Redirect to apply page
+  window.location.href = applyUrl;
+}
+
+// Update job status (admin/recruiter)
+async function updateStatus(status) {
+  if (!confirm(`Mark this job as ${status}?`)) return;
+
+  try {
+    const res = await fetchWithAuth(`/jobs/${jobId}`, {
+      method: "PUT",
+      body: JSON.stringify({ status })
+    });
+
+    if (res.ok) {
+      alert("Status updated!");
+      location.reload();
+    } else {
+      alert("Failed to update status");
+    }
+  } catch (err) {
+    console.error(err);
+  }
 }
 
 // Initialize
-document.addEventListener("DOMContentLoaded", () => {
-    checkAdminAuth();
-    fetchJobDetails();
-});
+document.addEventListener("DOMContentLoaded", fetchJobDetails);
+

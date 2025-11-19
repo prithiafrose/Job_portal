@@ -1,3 +1,4 @@
+// models/Job.js
 import { DataTypes, Op } from "sequelize";
 import sequelize from "../config/db.js";
 
@@ -9,49 +10,39 @@ const Job = sequelize.define("Job", {
   },
   title: { 
     type: DataTypes.STRING, 
-    allowNull: false,
-    field: 'title'
+    allowNull: false
   },
   company: { 
     type: DataTypes.STRING, 
-    allowNull: false,
-    field: 'company'
+    allowNull: false
   },
   location: { 
     type: DataTypes.STRING, 
-    allowNull: false,
-    field: 'location'
+    allowNull: true
   },
   type: { 
     type: DataTypes.STRING, 
-    allowNull: true,
-    field: 'type'
+    allowNull: true
   },
   salary: { 
     type: DataTypes.STRING, 
-    allowNull: true,
-    field: 'salary'
+    allowNull: true
   },
   description: { 
     type: DataTypes.TEXT, 
-    allowNull: true,
-    field: 'description'
-  },
-  skills: {
-    type: DataTypes.TEXT,
-    allowNull: true,
-    field: 'skills'
+    allowNull: true
   },
   posted_by: { 
     type: DataTypes.INTEGER, 
-    allowNull: true,
-    field: 'posted_by'
+    allowNull: true
+  },
+  created_at: {
+    type: DataTypes.DATE,
+    defaultValue: DataTypes.NOW
   }
 }, {
   tableName: 'jobs',
-  timestamps: true, // This will use createdAt and updatedAt
-  createdAt: 'created_at',
-  updatedAt: false // Schema does not have updated_at
+  timestamps: false // Use created_at in DB
 });
 
 // Static method to create job
@@ -73,13 +64,8 @@ Job.searchJobs = async function({ query, page, limit, filters }) {
   if (query) {
     whereClause[Op.or] = [
       { title: { [Op.like]: `%${query}%` } },
-      { company: { [Op.like]: `%${query}%` } },
-      { description: { [Op.like]: `%${query}%` } }
+      { company: { [Op.like]: `%${query}%` } }
     ];
-  }
-  
-  if (filters.type) {
-    whereClause.type = filters.type;
   }
   
   if (filters.location) {
@@ -103,18 +89,16 @@ Job.getJobById = async function(id) {
 
 // Static method to update job
 Job.updateJob = async function(id, fields) {
-  const [updatedRowsCount] = await this.update(fields, {
-    where: { id }
-  });
+  const [updatedRowsCount] = await this.update(fields, { where: { id } });
   return updatedRowsCount > 0;
 };
 
 // Static method to delete job
 Job.deleteJob = async function(id) {
-  const deletedRowsCount = await this.destroy({
-    where: { id }
-  });
+  const deletedRowsCount = await this.destroy({ where: { id } });
   return deletedRowsCount > 0;
 };
 
 export default Job;
+
+

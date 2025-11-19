@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Recruiter Dashboard</title>
+  <link rel="stylesheet" href="css/recruiter.css">
+</head>
+
+<body>
+  <div class="sidebar">
+    <h2>Recruiter</h2>
+    <a href="dashboard.html">Dashboard</a>
+    <a href="add-job.html">Add Job</a>
+    <a href="my-jobs.html">My Jobs</a>
+    <a href="applicants.html">Applicants</a>
+    <a href="profile.html">Profile</a>
+    <button class="logout-btn" onclick="logout()">Logout</button>
+  </div>
+
+  <div class="main">
+    <h1>Welcome, Recruiter</h1>
+
+    <div class="dashboard-stats">
+      <div class="stat-card">
+        <h3>Total Jobs Posted</h3>
+        <p id="totalJobs">0</p>
+      </div>
+
+      <div class="stat-card">
+        <h3>Total Applicants</h3>
+        <p id="totalApplicants">0</p>
+      </div>
+    </div>
+
+  </div>
+
+  <script src="js/recruiter.js"></script>
+</body>
+</html>

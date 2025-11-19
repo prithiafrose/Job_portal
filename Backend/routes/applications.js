@@ -1,9 +1,10 @@
 import express from 'express';
-const router = express.Router();
-import { applyForJob, getMyApplications, getForJob } from '../controllers/studentController.js';
+import { apply, getForJob, upload, getMyApplications } from '../controllers/recruiterapplicationcontroller.js';
 import { authMiddleware } from '../middleware/authMiddleware.js';
 
-router.post('/', authMiddleware, applyForJob);
+const router = express.Router();
+
+router.post('/', authMiddleware, upload.single('resume'), apply);
 router.get('/my-applications', authMiddleware, getMyApplications);
 router.get('/job/:jobId', authMiddleware, getForJob);
 

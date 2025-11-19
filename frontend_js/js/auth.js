@@ -57,6 +57,15 @@ document.addEventListener("DOMContentLoaded", () => {
         error.style.color = "green";
         error.textContent = "Login successful! Redirecting...";
 
+        // Check for redirect param
+        const urlParams = new URLSearchParams(window.location.search);
+        const redirectUrl = urlParams.get("redirect");
+
+        if (redirectUrl) {
+             setTimeout(() => window.location.href = decodeURIComponent(redirectUrl), 800);
+             return;
+        }
+
         const userRole = data.user.role;
 
         setTimeout(() => 
@@ -64,7 +73,11 @@ document.addEventListener("DOMContentLoaded", () => {
   window.location.href = "/FrontendUI/admin/dashboard.html";
 } else if (userRole === 'student') {
   window.location.href = "/frontend_js/Student_panel/dashboard.html";
-} else {
+} 
+else if (userRole === 'recruiter') {
+  window.location.href = "/FrontendUI/recruiter/dashboard.html";
+}
+else {
   alert("Invalid role returned from server!");
 }
 

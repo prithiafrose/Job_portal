@@ -250,8 +250,8 @@ if (appliedJobsTableBody) {
 
             appliedJobsTableBody.innerHTML = apps.map(app => `
                 <tr>
-                    <td>${escapeHTML(app.Job ? app.Job.job_position : 'Job Deleted')}</td>
-                    <td>${escapeHTML(app.Job ? app.Job.company_name : 'N/A')}</td>
+                    <td>${escapeHTML(app.Job ? (app.Job.title || app.Job.job_position) : 'Job Deleted')}</td>
+                    <td>${escapeHTML(app.Job ? (app.Job.company || app.Job.company_name) : 'N/A')}</td>
                     <td>${escapeHTML(app.Job ? app.Job.location : 'N/A')}</td>
                     <td><span class="status ${app.status}">${escapeHTML(app.status)}</span></td>
                 </tr>
