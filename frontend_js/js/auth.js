@@ -100,6 +100,46 @@ document.addEventListener("DOMContentLoaded", () => {
   const registerForm = document.getElementById("registerSubmit");
 
   if (registerForm) {
+    // Real-time Email Validation
+    const emailInput = registerForm.querySelector('input[name="email"]');
+    if (emailInput) {
+      const statusSpan = document.createElement("span");
+      statusSpan.style.marginLeft = "10px";
+      statusSpan.style.fontWeight = "bold";
+      statusSpan.style.fontSize = "0.9em";
+      emailInput.parentNode.appendChild(statusSpan);
+
+      emailInput.addEventListener("blur", async () => {
+        const email = emailInput.value.trim();
+        statusSpan.textContent = "";
+        if (!email) return;
+
+        statusSpan.textContent = "Checking...";
+        statusSpan.style.color = "blue";
+
+        try {
+          const res = await fetch(`${API_BASE}/check-email`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email }),
+          });
+          const data = await res.json();
+
+          if (data.valid) {
+            statusSpan.textContent = "✔ Valid email";
+            statusSpan.style.color = "green";
+          } else {
+            statusSpan.textContent = "✘ Invalid email";
+            statusSpan.style.color = "red";
+          }
+        } catch (err) {
+          console.error(err);
+          statusSpan.textContent = "Error checking email";
+          statusSpan.style.color = "orange";
+        }
+      });
+    }
+
     registerForm.addEventListener("submit", async (e) => {
       e.preventDefault();
 

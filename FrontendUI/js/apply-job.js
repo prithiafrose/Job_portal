@@ -21,14 +21,14 @@ function checkAuthentication() {
   if (!token) {
     // Not logged in, redirect to login with return URL
     const returnUrl = encodeURIComponent(window.location.href);
-    window.location.href = `/Auth/login.html?redirect=${returnUrl}`;
+    window.location.href = `/FrontendUI/Auth/login.html?redirect=${returnUrl}`;
     return false;
   }
   
   // Check if user is registered as student
   if (user.user_type !== "student") {
     alert("Only students can apply for jobs. Please register as a student.");
-    window.location.href = `/Auth/Register.html?redirect=${encodeURIComponent(window.location.href)}`;
+    window.location.href = `/FrontendUI/Auth/Register.html?redirect=${encodeURIComponent(window.location.href)}`;
     return false;
   }
   

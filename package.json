@@ -1,0 +1,5 @@
+{
+  "dependencies": {
+    "deep-email-validator": "^0.1.21"
+  }
+}
