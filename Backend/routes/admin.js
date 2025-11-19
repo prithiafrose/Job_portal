@@ -5,7 +5,9 @@ import {
   getUserStats,
   getJobStats,
   getPendingApprovals,
-  getRecentRegistrations
+  getRecentRegistrations,
+  getAllUsers,
+  deleteUser
 } from "../controllers/adminController.js";
 
 const router = express.Router();
@@ -19,5 +21,9 @@ router.get("/users/stats", getUserStats);
 router.get("/jobs/stats", getJobStats);
 router.get("/jobs/pending", getPendingApprovals);
 router.get("/users/recent", getRecentRegistrations);
+
+// User Management
+router.get("/users", getAllUsers);
+router.delete("/users/:id", deleteUser);
 
 export default router;

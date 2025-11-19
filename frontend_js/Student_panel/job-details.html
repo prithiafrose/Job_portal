@@ -20,40 +20,11 @@
     <h1>Job Details</h1>
     <div class="card" id="job-details">
       <!-- Job info loaded dynamically via JS -->
+      <p>Loading job details...</p>
     </div>
   </div>
 
-  <script src="../js/utils.js"></script>
-  <script>
-    const jobId = new URLSearchParams(window.location.search).get('id');
-    const detailsDiv = document.getElementById('job-details');
-
-    async function fetchJobDetails() {
-      try {
-        const res = await fetch(API_BASE + '/jobs/' + jobId);
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.error || 'Job not found');
-
-        detailsDiv.innerHTML = `
-          <h3>${escapeHTML(data.title)}</h3>
-          <p><strong>Company:</strong> ${escapeHTML(data.company)}</p>
-          <p><strong>Location:</strong> ${escapeHTML(data.location)}</p>
-          <p><strong>Salary:</strong> $${data.salary}</p>
-          <p><strong>Type:</strong> ${escapeHTML(data.type)}</p>
-          <p><strong>Description:</strong> ${escapeHTML(data.description)}</p>
-          <p><strong>Skills Required:</strong> ${escapeHTML(data.skills)}</p>
-          <button class="btn" onclick="applyJob()">Apply Now</button>
-        `;
-      } catch (err) {
-        detailsDiv.innerHTML = `<p style="color:red">${err.message}</p>`;
-      }
-    }
-
-    function applyJob() {
-      alert('Applied successfully!');
-    }
-
-    fetchJobDetails();
-  </script>
+  <!-- Use main.js which contains all the logic -->
+  <script src="main.js"></script>
 </body>
 </html>

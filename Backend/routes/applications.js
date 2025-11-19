@@ -1,9 +1,10 @@
-const express = require('express');
+import express from 'express';
 const router = express.Router();
-const appCtrl = require('../controllers/applicationsController');
-const { authMiddleware } = require('../middleware/authMiddleware');
+import { apply, getForJob, getMyApplications } from '../controllers/applicationsController.js';
+import { authMiddleware } from '../middleware/authMiddleware.js';
 
-router.post('/', authMiddleware, appCtrl.apply);
-router.get('/job/:jobId', authMiddleware, appCtrl.getForJob);
+router.post('/', authMiddleware, apply);
+router.get('/my-applications', authMiddleware, getMyApplications);
+router.get('/job/:jobId', authMiddleware, getForJob);
 
-module.exports = router;
+export default router;

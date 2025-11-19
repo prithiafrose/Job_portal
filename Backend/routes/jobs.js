@@ -1,19 +1,16 @@
-import { DataTypes } from "sequelize";
-import sequelize from "../config/db.js";
+import express from 'express';
+import { createJob, listJobs, getJob, updateJob, deleteJob } from '../controllers/jobsController.js';
+import { authMiddleware } from '../middleware/authMiddleware.js';
 
-const Job = sequelize.define("Job", {
-  job_position: { type: DataTypes.STRING, allowNull: false },
-  company_name: { type: DataTypes.STRING, allowNull: false },
-  monthly_salary: { type: DataTypes.INTEGER, allowNull: false },
-  location: { type: DataTypes.STRING, allowNull: false },
-  skills_required: { type: DataTypes.JSON, allowNull: false },
-  logo_url: { type: DataTypes.STRING },
-  // ADD THIS STATUS FIELD:
-  status: {
-    type: DataTypes.ENUM('pending', 'active', 'rejected', 'expired'),
-    defaultValue: 'pending'
-  }
-});
+const router = express.Router();
 
-export default Job;
+// Public routes
+router.get('/', listJobs);
+router.get('/:id', getJob);
 
+// Protected routes (require login)
+router.post('/', authMiddleware, createJob);
+router.put('/:id', authMiddleware, updateJob);
+router.delete('/:id', authMiddleware, deleteJob);
+
+export default router;

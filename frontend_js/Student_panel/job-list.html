@@ -22,20 +22,23 @@
     <!-- Filters -->
     <div class="card">
       <h3>Filter Jobs</h3>
-      <input type="text" id="jobTitle" placeholder="Job Title">
-      <input type="text" id="location" placeholder="Location">
-      <input type="text" id="skills" placeholder="Skills">
-      <input type="number" id="minSalary" placeholder="Min Salary">
-      <input type="number" id="maxSalary" placeholder="Max Salary">
-      <button id="applyFilters" class="btn">Apply Filters</button>
-      <button id="clearFilters" class="btn">Clear Filters</button>
+      <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 10px;">
+        <input type="text" id="jobTitle" placeholder="Job Title">
+        <input type="text" id="location" placeholder="Location">
+        <input type="text" id="skills" placeholder="Skills">
+      </div>
+      <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+        <input type="number" id="minSalary" placeholder="Min Salary">
+        <input type="number" id="maxSalary" placeholder="Max Salary">
+        <button id="applyFilters" class="btn">Apply Filters</button>
+        <button id="clearFilters" class="btn">Clear Filters</button>
+      </div>
     </div>
 
     <!-- Job List -->
     <div id="job-list"></div>
   </div>
 
-  <script src="../js/utils.js"></script>
-  <script src="../js/main.js"></script>
+  <script src="main.js"></script>
 </body>
 </html>

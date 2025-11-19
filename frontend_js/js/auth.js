@@ -116,6 +116,10 @@ const formData = {
 
         if (!res.ok) throw new Error(data.error || "Registration failed");
 
+        // Save token & user info
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("user", JSON.stringify(data.user));
+
         error.style.color = "green";
         error.textContent = "Registration successful! Redirecting...";
 

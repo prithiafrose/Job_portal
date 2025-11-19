@@ -78,3 +78,33 @@ export const getRecentRegistrations = async (req, res) => {
     res.status(500).json({ error: "Server error" });
   }
 };
+
+// User Management
+export const getAllUsers = async (req, res) => {
+  try {
+    const users = await User.findAll({
+      attributes: ['id', 'username', 'email', 'mobile', 'role'] // Exclude password
+    });
+    res.json(users);
+  } catch (error) {
+    console.error("Error fetching users:", error);
+    res.status(500).json({ error: "Server error" });
+  }
+};
+
+export const deleteUser = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const user = await User.findByPk(id);
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    await user.destroy();
+    res.json({ message: "User deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting user:", error);
+    res.status(500).json({ error: "Server error" });
+  }
+};
