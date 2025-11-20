@@ -1,5 +1,6 @@
 
 // Backend/index.js
+<<<<<<< HEAD
 const express = require("express");
 const cors = require("cors");
 const dotenv = require("dotenv");
@@ -13,17 +14,40 @@ const applicationsRoutes = require("./routes/applications.js");
 const paymentRoutes = require("./routes/payment.js");
 const adminRoutes = require("./routes/admin.js");
 const path = require("path");
+=======
+import express from "express";
+import cors from "cors";
+import dotenv from "dotenv";
+import authRoutes from "./routes/auth.js";
+import jobRoutes from "./routes/jobs.js";
+import sequelize from "./config/db.js";
+import uploadRoutes from "./routes/upload.js";
+import applicationRoutes from "./routes/applications.js";
+import adminRoutes from "./routes/admin.js";
+import recruiterRoutes from "./routes/recruiter.js";
+import profileRoutes from "./routes/profileRoutes.js";
+import { authMiddleware } from "./middleware/authMiddleware.js";
+import path from "path";
+>>>>>>> c9bb79de7d25ffeef274cc70238fb8e77b97a16d
 
 
 
 
+<<<<<<< HEAD
 dotenv.config({ path: path.join(__dirname, '.env') });
+=======
+dotenv.config();
+>>>>>>> c9bb79de7d25ffeef274cc70238fb8e77b97a16d
 const app = express();
 
 
 app.use(express.json());
 app.use(cors({
+<<<<<<< HEAD
   origin: true,
+=======
+  origin: ["http://127.0.0.1:5500", "http://localhost:5500"], // Allow both local dev URLs
+>>>>>>> c9bb79de7d25ffeef274cc70238fb8e77b97a16d
   credentials: true
 }));
 
@@ -41,11 +65,21 @@ app.use(express.static(frontendUIPath)); // Serve FrontendUI at root
 // Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/upload", uploadRoutes);
-app.use("/jobs", jobRoutes);
+app.use("/api/jobs", jobRoutes);
+app.use("/api/applications", applicationRoutes);
+app.use("/admin", adminRoutes);
 app.use("/api/recruiter", recruiterRoutes);
+<<<<<<< HEAD
 app.use("/apply-job", applicationsRoutes);
 app.use("/api/payment", paymentRoutes);
 app.use("/admin", adminRoutes);
+=======
+app.use("/api/profile", authMiddleware, profileRoutes);
+
+// Serve uploads statically so resumes/images can be accessed
+const uploadsDir = path.join(process.cwd(), "uploads");
+app.use("/uploads", express.static(uploadsDir));
+>>>>>>> c9bb79de7d25ffeef274cc70238fb8e77b97a16d
 
 // Start server after syncing DB
 const PORT = process.env.PORT || 5001;

@@ -1,18 +1,18 @@
+// Frontend: homepage JS
 const jobListEl = document.getElementById('job-list');
 const paginationEl = document.getElementById('pagination');
 const jobTitleInput = document.getElementById('jobTitle');
 const locationInput = document.getElementById('location');
-const skillsInput = document.getElementById('skills');
 const minSalaryInput = document.getElementById('minSalary');
 const maxSalaryInput = document.getElementById('maxSalary');
 
 let currentPage = 1;
-let totalPages = 1;
 let jobsData = [];
 
 // Fetch jobs from backend
 async function fetchJobs(page = 1) {
   try {
+<<<<<<< HEAD
     // Create URLSearchParams with current input values
     const params = new URLSearchParams({
         page: page,
@@ -34,6 +34,17 @@ async function fetchJobs(page = 1) {
     // Update current page state
     currentPage = page;
     
+=======
+    const res = await fetch(`http://localhost:5001/api/jobs/public?page=${page}`);
+    
+    if (!res.ok) throw new Error('Failed to fetch jobs');
+    
+    const data = await res.json();
+
+    // Backend returns array directly
+    jobsData = Array.isArray(data) ? data : [];
+
+>>>>>>> c9bb79de7d25ffeef274cc70238fb8e77b97a16d
     renderJobs();
     renderPagination();
   } catch (err) {
@@ -44,8 +55,22 @@ async function fetchJobs(page = 1) {
 
 // Render job cards
 function renderJobs() {
+<<<<<<< HEAD
   // No client-side filtering needed as backend handles it
   jobListEl.innerHTML = jobsData.length === 0
+=======
+  const filteredJobs = jobsData.filter(job => {
+    const titleMatch = job.title.toLowerCase().includes(jobTitleInput.value.toLowerCase());
+    const locationMatch = job.location.toLowerCase().includes(locationInput.value.toLowerCase());
+
+    const minSalaryMatch = minSalaryInput.value === '' || parseInt(job.salary) >= parseInt(minSalaryInput.value);
+    const maxSalaryMatch = maxSalaryInput.value === '' || parseInt(job.salary) <= parseInt(maxSalaryInput.value);
+
+    return titleMatch && locationMatch && minSalaryMatch && maxSalaryMatch;
+  });
+
+  jobListEl.innerHTML = filteredJobs.length === 0
+>>>>>>> c9bb79de7d25ffeef274cc70238fb8e77b97a16d
     ? "<p>No jobs found</p>"
     : jobsData.map(job => {
       // Handle skills display
@@ -61,6 +86,7 @@ function renderJobs() {
 
       return `
       <div class="job-card">
+<<<<<<< HEAD
         ${job.logo_url ? `<img src="${job.logo_url}" alt="${job.company_name} logo" onerror="this.style.display='none'">` : ''}
         <div>
           <h3>${job.job_position}</h3>
@@ -69,6 +95,14 @@ function renderJobs() {
           <p><strong>Location:</strong> ${job.location}</p>
           <p><strong>Skills:</strong> ${skillsDisplay}</p>
           <p><strong>Posted:</strong> ${new Date(job.createdAt).toLocaleDateString()}</p>
+=======
+        <div>
+          <h3>${job.title}</h3>
+          <p>Company: ${job.company}</p>
+          <p>Salary: ${job.salary || 'N/A'}</p>
+          <p>Location: ${job.location || 'N/A'}</p>
+          <p>Type: ${job.type || 'N/A'}</p>
+>>>>>>> c9bb79de7d25ffeef274cc70238fb8e77b97a16d
         </div>
         <button onclick="viewJob(${job.id})">View Details</button>
       </div>
@@ -76,8 +110,9 @@ function renderJobs() {
     }).join('');
 }
 
-// Pagination
+// Pagination (simple version)
 function renderPagination() {
+<<<<<<< HEAD
   let html = '';
   // Add previous button
   if (currentPage > 1) {
@@ -137,14 +172,28 @@ const debouncedFetch = debounce(() => fetchJobs(1), 500);
   if (input) {
     input.addEventListener('input', debouncedFetch);
   }
+=======
+  paginationEl.innerHTML = ''; // Clear previous buttons
+  // If backend does not return total pages, we can skip or implement later
+}
+
+// Navigate to job details
+function viewJob(id) {
+  window.location.href = `/FrontendUI/admin/job-details.html?id=${id}`;
+}
+
+// Filter and clear buttons
+document.getElementById('applyFilters').addEventListener('click', () => {
+  renderJobs();
+>>>>>>> c9bb79de7d25ffeef274cc70238fb8e77b97a16d
 });
 
 document.getElementById('clearFilters').addEventListener('click', () => {
   jobTitleInput.value = '';
   locationInput.value = '';
-  skillsInput.value = '';
   minSalaryInput.value = '';
   maxSalaryInput.value = '';
+<<<<<<< HEAD
   fetchJobs(1);
 });
 
@@ -153,5 +202,10 @@ function viewJob(id) {
   window.location.href = `job-details.html?id=${id}`;
 }
 
+=======
+  renderJobs();
+});
+
+>>>>>>> c9bb79de7d25ffeef274cc70238fb8e77b97a16d
 // Initial fetch
 fetchJobs();

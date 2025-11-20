@@ -67,13 +67,37 @@ document.addEventListener("DOMContentLoaded", () => {
         error.style.color = "green";
         error.textContent = "Login successful! Redirecting...";
 
+        // Check for redirect param
+        const urlParams = new URLSearchParams(window.location.search);
+        const redirectUrl = urlParams.get("redirect");
+
+        if (redirectUrl) {
+             setTimeout(() => window.location.href = decodeURIComponent(redirectUrl), 800);
+             return;
+        }
+
         const userRole = data.user.role;
 
+<<<<<<< HEAD
         setTimeout(() => {
           // Check if there's a redirect URL stored
           const redirectUrl = localStorage.getItem("redirectAfterLogin");
           if (redirectUrl) {
             localStorage.removeItem("redirectAfterLogin");
+=======
+        setTimeout(() => 
+          {if (userRole === 'admin') {
+  window.location.href = "/FrontendUI/admin/dashboard.html";
+} else if (userRole === 'student') {
+  window.location.href = "/frontend_js/Student_panel/dashboard.html";
+} 
+else if (userRole === 'recruiter') {
+  window.location.href = "/FrontendUI/recruiter/dashboard.html";
+}
+else {
+  alert("Invalid role returned from server!");
+}
+>>>>>>> c9bb79de7d25ffeef274cc70238fb8e77b97a16d
 
             // Safety check: If redirecting to job application, ensure user is student
             if (redirectUrl.includes("apply-job") && userRole !== "student") {
@@ -181,6 +205,10 @@ const formData = {
         if (!res.ok) throw new Error(data.error || "Registration failed");
         localStorage.setItem("token", data.token);
 localStorage.setItem("user", JSON.stringify(data.user));
+
+        // Save token & user info
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("user", JSON.stringify(data.user));
 
         error.style.color = "green";
         error.textContent = "Registration successful! Redirecting...";

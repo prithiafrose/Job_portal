@@ -1,6 +1,10 @@
 {
   "dependencies": {
+<<<<<<< HEAD
     "deep-email-validator": "^0.1.21",
     "nodemailer": "^7.0.10"
+=======
+    "sequelize": "^6.37.7"
+>>>>>>> c9bb79de7d25ffeef274cc70238fb8e77b97a16d
   }
 }

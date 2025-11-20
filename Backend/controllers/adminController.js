@@ -25,9 +25,10 @@ const getUserStats = async (req, res) => {
 const getJobStats = async (req, res) => {
   try {
     const totalJobs = await Job.count();
-    const activeJobs = await Job.count({ where: { status: 'active' } });
-    const pendingJobs = await Job.count({ where: { status: 'pending' } });
-    const expiredJobs = await Job.count({ where: { status: 'expired' } });
+    // Status field does not exist in schema, so returning 0/null for these
+    const activeJobs = totalJobs; // Assuming all posted jobs are active
+    const pendingJobs = 0;
+    const expiredJobs = 0;
 
     res.json({
       totalJobs,
@@ -43,9 +44,8 @@ const getJobStats = async (req, res) => {
 
 const getPendingApprovals = async (req, res) => {
   try {
-    const pendingCount = await Job.count({ 
-      where: { status: 'pending' } 
-    });
+    // Status field does not exist, so no pending approvals logic
+    const pendingCount = 0;
 
     res.json({
       pendingCount
@@ -80,6 +80,7 @@ const getRecentRegistrations = async (req, res) => {
 };
 
 // User Management
+<<<<<<< HEAD
 const getUsers = async (req, res) => {
   try {
     const { role } = req.query;
@@ -91,6 +92,13 @@ const getUsers = async (req, res) => {
       order: [['createdAt', 'DESC']]
     });
 
+=======
+export const getAllUsers = async (req, res) => {
+  try {
+    const users = await User.findAll({
+      attributes: ['id', 'username', 'email', 'mobile', 'role'] // Exclude password
+    });
+>>>>>>> c9bb79de7d25ffeef274cc70238fb8e77b97a16d
     res.json(users);
   } catch (error) {
     console.error("Error fetching users:", error);
@@ -98,6 +106,7 @@ const getUsers = async (req, res) => {
   }
 };
 
+<<<<<<< HEAD
 const deleteUser = async (req, res) => {
   try {
     const { id } = req.params;
@@ -114,11 +123,25 @@ const deleteUser = async (req, res) => {
 
     await user.destroy();
     res.json({ success: true, message: "User deleted successfully" });
+=======
+export const deleteUser = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const user = await User.findByPk(id);
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    await user.destroy();
+    res.json({ message: "User deleted successfully" });
+>>>>>>> c9bb79de7d25ffeef274cc70238fb8e77b97a16d
   } catch (error) {
     console.error("Error deleting user:", error);
     res.status(500).json({ error: "Server error" });
   }
 };
+<<<<<<< HEAD
 
 // Job Management
 const getAllJobs = async (req, res) => {
@@ -190,3 +213,5 @@ module.exports = {
   updateJobStatus,
   deleteJob
 };
+=======
+>>>>>>> c9bb79de7d25ffeef274cc70238fb8e77b97a16d

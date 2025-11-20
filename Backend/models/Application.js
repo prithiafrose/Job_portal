@@ -1,8 +1,15 @@
+<<<<<<< HEAD
 // Backend/models/Application.js
 const { DataTypes } = require("sequelize");
 const sequelize = require("../config/db");
 const User = require("./User");
 const Job = require("./Job");
+=======
+import { DataTypes } from "sequelize";
+import sequelize from "../config/db.js";
+import User from "./User.js";
+import Job from "./Job.js";
+>>>>>>> c9bb79de7d25ffeef274cc70238fb8e77b97a16d
 
 const Application = sequelize.define(
   "Application",
@@ -48,7 +55,11 @@ Application.getApplicationsForJob = async function(jobId) {
       },
       {
         model: Job,
+<<<<<<< HEAD
         attributes: ['job_position', 'company_name']
+=======
+        attributes: ['title', 'company']
+>>>>>>> c9bb79de7d25ffeef274cc70238fb8e77b97a16d
       }
     ],
     order: [['created_at', 'DESC']]
@@ -65,4 +76,8 @@ Application.updatePaymentStatus = async function(applicationId, paymentData) {
   });
 };
 
+<<<<<<< HEAD
 module.exports = Application;
+=======
+export default Application;
+>>>>>>> c9bb79de7d25ffeef274cc70238fb8e77b97a16d

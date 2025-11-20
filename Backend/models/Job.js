@@ -1,5 +1,11 @@
+<<<<<<< HEAD
 const { DataTypes, Op } = require("sequelize");
 const sequelize = require("../config/db");
+=======
+// models/Job.js
+import { DataTypes, Op } from "sequelize";
+import sequelize from "../config/db.js";
+>>>>>>> c9bb79de7d25ffeef274cc70238fb8e77b97a16d
 
 const Job = sequelize.define("Job", {
   id: {
@@ -7,35 +13,29 @@ const Job = sequelize.define("Job", {
     primaryKey: true,
     autoIncrement: true
   },
-  job_position: { 
+  title: { 
     type: DataTypes.STRING, 
-    allowNull: false,
-    field: 'job_position'
+    allowNull: false
   },
-  company_name: { 
+  company: { 
     type: DataTypes.STRING, 
-    allowNull: false,
-    field: 'company_name'
+    allowNull: false
   },
   location: { 
     type: DataTypes.STRING, 
-    allowNull: false,
-    field: 'location'
+    allowNull: true
   },
-  monthly_salary: { 
-    type: DataTypes.INTEGER, 
-    allowNull: false,
-    field: 'monthly_salary'
-  },
-  skills_required: { 
-    type: DataTypes.TEXT, 
-    allowNull: false,
-    field: 'skills_required'
-  },
-  logo_url: { 
+  type: { 
     type: DataTypes.STRING, 
-    allowNull: true,
-    field: 'logo_url'
+    allowNull: true
+  },
+  salary: { 
+    type: DataTypes.STRING, 
+    allowNull: true
+  },
+  description: { 
+    type: DataTypes.TEXT, 
+    allowNull: true
   },
   status: {
     type: DataTypes.ENUM('pending', 'active', 'expired', 'rejected'),
@@ -44,12 +44,15 @@ const Job = sequelize.define("Job", {
   },
   posted_by: { 
     type: DataTypes.INTEGER, 
-    allowNull: true,
-    field: 'posted_by'
+    allowNull: true
+  },
+  created_at: {
+    type: DataTypes.DATE,
+    defaultValue: DataTypes.NOW
   }
 }, {
   tableName: 'jobs',
-  timestamps: true // This will use createdAt and updatedAt
+  timestamps: false // Use created_at in DB
 });
 
 // Static method to create job
@@ -70,6 +73,7 @@ Job.searchJobs = async function({ query, page, limit, filters }) {
   
   if (query) {
     whereClause[Op.or] = [
+<<<<<<< HEAD
       { job_position: { [Op.like]: `%${query}%` } },
       { company_name: { [Op.like]: `%${query}%` } }
     ];
@@ -80,6 +84,13 @@ Job.searchJobs = async function({ query, page, limit, filters }) {
     // whereClause.type = filters.type;
   }
   
+=======
+      { title: { [Op.like]: `%${query}%` } },
+      { company: { [Op.like]: `%${query}%` } }
+    ];
+  }
+  
+>>>>>>> c9bb79de7d25ffeef274cc70238fb8e77b97a16d
   if (filters.location) {
     whereClause.location = { [Op.like]: `%${filters.location}%` };
   }
@@ -103,7 +114,7 @@ Job.searchJobs = async function({ query, page, limit, filters }) {
     where: whereClause,
     limit,
     offset,
-    order: [['createdAt', 'DESC']]
+    order: [['created_at', 'DESC']]
   });
 
   return { jobs: rows, total: count };
@@ -116,18 +127,20 @@ Job.getJobById = async function(id) {
 
 // Static method to update job
 Job.updateJob = async function(id, fields) {
-  const [updatedRowsCount] = await this.update(fields, {
-    where: { id }
-  });
+  const [updatedRowsCount] = await this.update(fields, { where: { id } });
   return updatedRowsCount > 0;
 };
 
 // Static method to delete job
 Job.deleteJob = async function(id) {
-  const deletedRowsCount = await this.destroy({
-    where: { id }
-  });
+  const deletedRowsCount = await this.destroy({ where: { id } });
   return deletedRowsCount > 0;
 };
 
+<<<<<<< HEAD
 module.exports = Job;
+=======
+export default Job;
+
+
+>>>>>>> c9bb79de7d25ffeef274cc70238fb8e77b97a16d

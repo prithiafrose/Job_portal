@@ -5,6 +5,7 @@ const {
   getUserStats,
   getJobStats,
   getPendingApprovals,
+<<<<<<< HEAD
   getRecentRegistrations,
   getUsers,
   deleteUser,
@@ -12,6 +13,11 @@ const {
   updateJobStatus,
   deleteJob
 } = require("../controllers/adminController");
+=======
+  getRecentRegistrations
+} from "../controllers/adminController.js";
+import Application from "../models/Application.js";
+>>>>>>> c9bb79de7d25ffeef274cc70238fb8e77b97a16d
 
 const router = express.Router();
 
@@ -25,6 +31,7 @@ router.get("/jobs/stats", getJobStats);
 router.get("/jobs/pending", getPendingApprovals);
 router.get("/users/recent", getRecentRegistrations);
 
+<<<<<<< HEAD
 // User Management
 router.get("/users", getUsers);
 router.delete("/users/:id", deleteUser);
@@ -38,6 +45,11 @@ router.delete("/jobs/:id", deleteJob);
 router.get("/job-applicants/:jobId", async (req, res) => {
   try {
     const Application = require("../models/Application");
+=======
+// Get applicants for a specific job
+router.get("/job-applicants/:jobId", async (req, res) => {
+  try {
+>>>>>>> c9bb79de7d25ffeef274cc70238fb8e77b97a16d
     const apps = await Application.getApplicationsForJob(req.params.jobId);
     
     // Format for frontend
@@ -63,7 +75,10 @@ router.get("/job-applicants/:jobId", async (req, res) => {
 // Update application status
 router.put("/application-status/:applicationId", async (req, res) => {
   try {
+<<<<<<< HEAD
     const Application = require("../models/Application");
+=======
+>>>>>>> c9bb79de7d25ffeef274cc70238fb8e77b97a16d
     const { status } = req.body;
     
     const application = await Application.findByPk(req.params.applicationId);
@@ -79,4 +94,8 @@ router.put("/application-status/:applicationId", async (req, res) => {
   }
 });
 
+<<<<<<< HEAD
 module.exports = router;
+=======
+export default router;
+>>>>>>> c9bb79de7d25ffeef274cc70238fb8e77b97a16d

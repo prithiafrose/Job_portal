@@ -1,92 +1,35 @@
+<<<<<<< HEAD
 const express = require("express");
 const { createJob, listJobs, getJob, updateJob, deleteJob } = require("../controllers/jobsController");
 const { getForJob } = require("../controllers/applicationsController");
 const { authMiddleware } = require("../middleware/authMiddleware");
+=======
+import express from "express";
+import { createJob, listJobs, getJob, updateJob, deleteJob } from "../controllers/jobsController.js";
+import { authMiddleware } from "../middleware/authMiddleware.js";
+>>>>>>> c9bb79de7d25ffeef274cc70238fb8e77b97a16d
 
 const router = express.Router();
 
-// Apply auth middleware to all recruiter routes
+// All recruiter routes require authentication
 router.use(authMiddleware);
 
-// POST /api/recruiter/jobs - Create a new job
+// Create job
 router.post("/jobs", createJob);
 
-// GET /api/recruiter/jobs - Get jobs posted by current recruiter
-router.get("/jobs", async (req, res) => {
-  try {
-    const Job = (await import("../models/Job.js")).default;
-    const jobs = await Job.findAll({
-      where: { posted_by: req.user.id },
-      order: [["id", "DESC"]]
-    });
-    res.json(jobs);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Server error" });
-  }
-});
+// List all jobs
+router.get("/jobs", listJobs);
 
-// GET /api/recruiter/jobs/count - Get count of jobs posted by recruiter
-router.get("/jobs/count", async (req, res) => {
-  try {
-    const Job = (await import("../models/Job.js")).default;
-    const count = await Job.count({
-      where: { posted_by: req.user.id }
-    });
-    res.json({ count });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Server error" });
-  }
-});
-
-// GET /api/recruiter/jobs/:id - Get specific job by recruiter
+// Get single job
 router.get("/jobs/:id", getJob);
 
-// PUT /api/recruiter/jobs/:id - Update job (only if posted by recruiter)
-router.put("/jobs/:id", async (req, res) => {
-  try {
-    const Job = (await import("../models/Job.js")).default;
-    const job = await Job.findByPk(req.params.id);
-    
-    if (!job) {
-      return res.status(404).json({ error: "Job not found" });
-    }
-    
-    if (job.posted_by !== req.user.id) {
-      return res.status(403).json({ error: "Not authorized to update this job" });
-    }
-    
-    await job.update(req.body);
-    res.json(job);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Server error" });
-  }
-});
+// Update job
+router.put("/jobs/:id", updateJob);
 
-// DELETE /api/recruiter/jobs/:id - Delete job (only if posted by recruiter)
-router.delete("/jobs/:id", async (req, res) => {
-  try {
-    const Job = (await import("../models/Job.js")).default;
-    const job = await Job.findByPk(req.params.id);
-    
-    if (!job) {
-      return res.status(404).json({ error: "Job not found" });
-    }
-    
-    if (job.posted_by !== req.user.id) {
-      return res.status(403).json({ error: "Not authorized to delete this job" });
-    }
-    
-    await job.destroy();
-    res.json({ success: true });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Server error" });
-  }
-});
+// Delete job
+router.delete("/jobs/:id", deleteJob);
 
+<<<<<<< HEAD
 // GET /api/recruiter/applicants - Get all applicants for recruiter's jobs
 router.get("/applicants", async (req, res) => {
   try {
@@ -164,3 +107,6 @@ router.put("/applications/:id/status", async (req, res) => {
 });
 
 module.exports = router;
+=======
+export default router;
+>>>>>>> c9bb79de7d25ffeef274cc70238fb8e77b97a16d
