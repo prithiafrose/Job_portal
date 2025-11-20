@@ -37,6 +37,11 @@ const Job = sequelize.define("Job", {
     allowNull: true,
     field: 'logo_url'
   },
+  status: {
+    type: DataTypes.ENUM('pending', 'active', 'expired', 'rejected'),
+    defaultValue: 'pending',
+    field: 'status'
+  },
   posted_by: { 
     type: DataTypes.INTEGER, 
     allowNull: true,
@@ -77,6 +82,21 @@ Job.searchJobs = async function({ query, page, limit, filters }) {
   
   if (filters.location) {
     whereClause.location = { [Op.like]: `%${filters.location}%` };
+  }
+
+  if (filters.minSalary) {
+    whereClause.monthly_salary = { [Op.gte]: filters.minSalary };
+  }
+
+  if (filters.maxSalary) {
+    whereClause.monthly_salary = { 
+      ...whereClause.monthly_salary,
+      [Op.lte]: filters.maxSalary 
+    };
+  }
+
+  if (filters.skills) {
+    whereClause.skills_required = { [Op.like]: `%${filters.skills}%` };
   }
 
   const { count, rows } = await this.findAndCountAll({

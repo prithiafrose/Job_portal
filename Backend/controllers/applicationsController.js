@@ -70,4 +70,28 @@ const getForJob = async (req, res) => {
   }
 };
 
-module.exports = { apply, getForJob };
+const getApplicationsByUser = async (req, res) => {
+  try {
+    const user_id = req.user.id;
+    // Assuming model has appropriate include
+    const Job = require('../models/Job');
+    
+    const applications = await Application.findAll({
+      where: { user_id },
+      include: [
+        {
+          model: Job,
+          attributes: ['id', 'job_position', 'company_name', 'location', 'monthly_salary']
+        }
+      ],
+      order: [['createdAt', 'DESC']]
+    });
+    
+    res.json(applications);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: 'Server error' });
+  }
+};
+
+module.exports = { apply, getForJob, getApplicationsByUser };

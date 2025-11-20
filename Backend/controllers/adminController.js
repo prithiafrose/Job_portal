@@ -79,4 +79,114 @@ const getRecentRegistrations = async (req, res) => {
   }
 };
 
-module.exports = { getUserStats, getJobStats, getPendingApprovals, getRecentRegistrations };
+// User Management
+const getUsers = async (req, res) => {
+  try {
+    const { role } = req.query;
+    const whereClause = role ? { role } : {};
+    
+    const users = await User.findAll({
+      where: whereClause,
+      attributes: ['id', 'username', 'email', 'mobile', 'role', 'createdAt'],
+      order: [['createdAt', 'DESC']]
+    });
+
+    res.json(users);
+  } catch (error) {
+    console.error("Error fetching users:", error);
+    res.status(500).json({ error: "Server error" });
+  }
+};
+
+const deleteUser = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const user = await User.findByPk(id);
+    
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+    
+    // Prevent deleting self (optional but good practice)
+    if (user.id === req.user.id) {
+      return res.status(400).json({ error: "Cannot delete yourself" });
+    }
+
+    await user.destroy();
+    res.json({ success: true, message: "User deleted successfully" });
+  } catch (error) {
+    console.error("Error deleting user:", error);
+    res.status(500).json({ error: "Server error" });
+  }
+};
+
+// Job Management
+const getAllJobs = async (req, res) => {
+  try {
+    const jobs = await Job.findAll({
+      include: [
+        { model: User, as: 'recruiter', attributes: ['username', 'email'] } // Assuming association exists
+      ],
+      order: [['createdAt', 'DESC']]
+    });
+    
+    // If association doesn't exist, Sequelize might throw error or just ignore include.
+    // Safe fallback:
+    // const jobs = await Job.findAll({ order: [['createdAt', 'DESC']] });
+    
+    res.json(jobs);
+  } catch (error) {
+    console.error("Error fetching all jobs:", error);
+    // Fallback without include if it fails
+    try {
+      const jobs = await Job.findAll({ order: [['createdAt', 'DESC']] });
+      res.json(jobs);
+    } catch (retryError) {
+      res.status(500).json({ error: "Server error" });
+    }
+  }
+};
+
+const updateJobStatus = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { status } = req.body;
+    
+    const job = await Job.findByPk(id);
+    if (!job) return res.status(404).json({ error: "Job not found" });
+    
+    job.status = status;
+    await job.save();
+    
+    res.json({ success: true, job });
+  } catch (error) {
+    console.error("Error updating job status:", error);
+    res.status(500).json({ error: "Server error" });
+  }
+};
+
+const deleteJob = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const job = await Job.findByPk(id);
+    if (!job) return res.status(404).json({ error: "Job not found" });
+    
+    await job.destroy();
+    res.json({ success: true });
+  } catch (error) {
+    console.error("Error deleting job:", error);
+    res.status(500).json({ error: "Server error" });
+  }
+};
+
+module.exports = { 
+  getUserStats, 
+  getJobStats, 
+  getPendingApprovals, 
+  getRecentRegistrations,
+  getUsers,
+  deleteUser,
+  getAllJobs,
+  updateJobStatus,
+  deleteJob
+};

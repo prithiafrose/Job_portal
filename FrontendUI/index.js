@@ -13,10 +13,27 @@ let jobsData = [];
 // Fetch jobs from backend
 async function fetchJobs(page = 1) {
   try {
-    const res = await fetch(`http://localhost:5001/jobs?page=${page}&limit=10`);
+    // Create URLSearchParams with current input values
+    const params = new URLSearchParams({
+        page: page,
+        limit: 10
+    });
+
+    if (jobTitleInput.value.trim()) params.append('q', jobTitleInput.value.trim());
+    if (locationInput.value.trim()) params.append('location', locationInput.value.trim());
+    if (skillsInput.value.trim()) params.append('skills', skillsInput.value.trim());
+    if (minSalaryInput.value.trim()) params.append('minSalary', minSalaryInput.value.trim());
+    if (maxSalaryInput.value.trim()) params.append('maxSalary', maxSalaryInput.value.trim());
+
+    const res = await fetch(`http://localhost:5001/jobs?${params.toString()}`);
     const data = await res.json();
+    
     jobsData = data.jobs || [];
     totalPages = Math.ceil(data.total / 10) || 1;
+    
+    // Update current page state
+    currentPage = page;
+    
     renderJobs();
     renderPagination();
   } catch (err) {
@@ -27,33 +44,10 @@ async function fetchJobs(page = 1) {
 
 // Render job cards
 function renderJobs() {
-  const filteredJobs = jobsData.filter(job => {
-    const titleMatch = job.job_position.toLowerCase().includes(jobTitleInput.value.toLowerCase());
-    const locationMatch = job.location.toLowerCase().includes(locationInput.value.toLowerCase());
-
-    // Handle skills_required - it could be JSON string or array
-    let jobSkills = [];
-    try {
-      jobSkills = Array.isArray(job.skills_required) 
-        ? job.skills_required 
-        : JSON.parse(job.skills_required || '[]');
-    } catch (e) {
-      jobSkills = (job.skills_required || '').split(',').map(s => s.trim()).filter(s => s);
-    }
-
-    const skillsMatch = skillsInput.value === '' || skillsInput.value
-      .split(',')
-      .every(s => jobSkills.some(skill => skill.toLowerCase().includes(s.trim().toLowerCase())));
-
-    const minSalaryMatch = minSalaryInput.value === '' || job.monthly_salary >= parseInt(minSalaryInput.value);
-    const maxSalaryMatch = maxSalaryInput.value === '' || job.monthly_salary <= parseInt(maxSalaryInput.value);
-
-    return titleMatch && locationMatch && skillsMatch && minSalaryMatch && maxSalaryMatch;
-  });
-
-  jobListEl.innerHTML = filteredJobs.length === 0
+  // No client-side filtering needed as backend handles it
+  jobListEl.innerHTML = jobsData.length === 0
     ? "<p>No jobs found</p>"
-    : filteredJobs.map(job => {
+    : jobsData.map(job => {
       // Handle skills display
       let skillsDisplay = '';
       try {
@@ -85,22 +79,64 @@ function renderJobs() {
 // Pagination
 function renderPagination() {
   let html = '';
-  for (let i = 1; i <= totalPages; i++) {
+  // Add previous button
+  if (currentPage > 1) {
+      html += `<button class="page-btn" onclick="goToPage(${currentPage - 1})">Prev</button>`;
+  }
+
+  // Show limited page numbers for better UX
+  const startPage = Math.max(1, currentPage - 2);
+  const endPage = Math.min(totalPages, currentPage + 2);
+
+  if (startPage > 1) {
+      html += `<button class="page-btn" onclick="goToPage(1)">1</button>`;
+      if (startPage > 2) html += `<span>...</span>`;
+  }
+
+  for (let i = startPage; i <= endPage; i++) {
     html += `<button class="page-btn ${i === currentPage ? 'disabled' : ''}" onclick="goToPage(${i})">${i}</button>`;
   }
+
+  if (endPage < totalPages) {
+      if (endPage < totalPages - 1) html += `<span>...</span>`;
+      html += `<button class="page-btn" onclick="goToPage(${totalPages})">${totalPages}</button>`;
+  }
+
+  // Add next button
+  if (currentPage < totalPages) {
+      html += `<button class="page-btn" onclick="goToPage(${currentPage + 1})">Next</button>`;
+  }
+
   paginationEl.innerHTML = html;
 }
 
 function goToPage(page) {
-  currentPage = page;
   fetchJobs(page);
 }
 
-// Filter and clear button listeners (once)
+// Filter and clear button listeners
 document.getElementById('applyFilters').addEventListener('click', () => {
-  currentPage = 1;
-  renderJobs();
-  renderPagination();
+  fetchJobs(1); // Always reset to page 1 when filtering
+});
+
+// Debounce function to limit API calls
+function debounce(func, delay) {
+  let timeoutId;
+  return function (...args) {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => {
+      func.apply(this, args);
+    }, delay);
+  };
+}
+
+// Add live filtering with debounce
+const debouncedFetch = debounce(() => fetchJobs(1), 500);
+
+[jobTitleInput, locationInput, skillsInput, minSalaryInput, maxSalaryInput].forEach(input => {
+  if (input) {
+    input.addEventListener('input', debouncedFetch);
+  }
 });
 
 document.getElementById('clearFilters').addEventListener('click', () => {
@@ -109,9 +145,7 @@ document.getElementById('clearFilters').addEventListener('click', () => {
   skillsInput.value = '';
   minSalaryInput.value = '';
   maxSalaryInput.value = '';
-  currentPage = 1;
-  renderJobs();
-  renderPagination();
+  fetchJobs(1);
 });
 
 // View job details

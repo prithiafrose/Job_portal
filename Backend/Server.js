@@ -23,14 +23,20 @@ const app = express();
 
 app.use(express.json());
 app.use(cors({
-  origin: "http://127.0.0.1:5500",
+  origin: true,
   credentials: true
 }));
 
-// Serve static files from FrontendUI
-app.use(express.static(path.join(__dirname, '../FrontendUI')));
-app.use('/FrontendUI', express.static(path.join(__dirname, '../FrontendUI')));
-app.use('/frontend_js', express.static(path.join(__dirname, '../frontend_js')));
+// Serve static files
+const frontendUIPath = path.resolve(__dirname, '../FrontendUI');
+const frontendJsPath = path.resolve(__dirname, '../frontend_js');
+
+console.log(`Serving FrontendUI from: ${frontendUIPath}`);
+console.log(`Serving frontend_js from: ${frontendJsPath}`);
+
+app.use('/frontend_js', express.static(frontendJsPath)); // Serve frontend_js specific route first
+app.use('/FrontendUI', express.static(frontendUIPath));
+app.use(express.static(frontendUIPath)); // Serve FrontendUI at root
 
 // Routes
 app.use("/api/auth", authRoutes);

@@ -5,7 +5,12 @@ const {
   getUserStats,
   getJobStats,
   getPendingApprovals,
-  getRecentRegistrations
+  getRecentRegistrations,
+  getUsers,
+  deleteUser,
+  getAllJobs,
+  updateJobStatus,
+  deleteJob
 } = require("../controllers/adminController");
 
 const router = express.Router();
@@ -19,6 +24,15 @@ router.get("/users/stats", getUserStats);
 router.get("/jobs/stats", getJobStats);
 router.get("/jobs/pending", getPendingApprovals);
 router.get("/users/recent", getRecentRegistrations);
+
+// User Management
+router.get("/users", getUsers);
+router.delete("/users/:id", deleteUser);
+
+// Job Management
+router.get("/jobs", getAllJobs);
+router.put("/jobs/:id/status", updateJobStatus);
+router.delete("/jobs/:id", deleteJob);
 
 // Get applicants for a specific job
 router.get("/job-applicants/:jobId", async (req, res) => {

@@ -313,6 +313,19 @@ applicationForm.addEventListener("submit", async (e) => {
   }
 });
 
+
+// Handle logout
+const logoutBtn = document.getElementById("logoutBtn");
+if (logoutBtn) {
+  logoutBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    localStorage.removeItem("role");
+    window.location.href = "Auth/login.html";
+  });
+}
+
 // Initialize page
 if (checkAuthentication()) {
   fetchJobDetails();

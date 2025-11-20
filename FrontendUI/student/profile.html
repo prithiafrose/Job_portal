@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Student Profile</title>
+  <link rel="stylesheet" href="../css/style.css">
+  <style>
+    body { display: flex; min-height: 100vh; margin: 0; font-family: Arial, sans-serif; background-color: #f4f4f4; }
+    .sidebar { width: 250px; background-color: #333; color: white; padding: 20px; display: flex; flex-direction: column; }
+    .sidebar a { color: white; text-decoration: none; padding: 10px; margin-bottom: 5px; border-radius: 4px; }
+    .sidebar a:hover, .sidebar a.active { background-color: #555; }
+    .sidebar .logout-btn { margin-top: auto; background-color: #ff4d4d; border: none; padding: 10px; color: white; cursor: pointer; border-radius: 4px; }
+    
+    .main-content { flex: 1; padding: 20px; }
+    .card { background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); max-width: 600px; margin: 0 auto; }
+    
+    form label { display: block; margin-bottom: 5px; font-weight: bold; }
+    form input { width: 100%; padding: 8px; margin-bottom: 15px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; }
+    .btn { background-color: #007bff; color: white; border: none; padding: 10px 20px; cursor: pointer; border-radius: 4px; font-size: 16px; }
+    .btn:hover { background-color: #0056b3; }
+  </style>
+</head>
+<body>
+
+  <div class="sidebar">
+    <h2 style="text-align: center;">Student Panel</h2>
+    <a href="../index.html" target="_blank">Browse Jobs</a>
+    <a href="dashboard.html">My Applications</a>
+    <a href="profile.html" class="active">My Profile</a>
+    <button id="logout-btn" class="logout-btn">Logout</button>
+  </div>
+
+  <div class="main-content">
+    <h1>My Profile</h1>
+
+    <div class="card">
+      <form id="profile-form">
+        <label>Username</label>
+        <input type="text" id="username" required>
+
+        <label>Email</label>
+        <input type="email" id="email" required>
+
+        <label>Mobile</label>
+        <input type="text" id="mobile" required>
+
+        <label>New Password (leave blank to keep current)</label>
+        <input type="password" id="password" placeholder="New Password">
+
+        <button class="btn" type="submit">Update Profile</button>
+      </form>
+    </div>
+  </div>
+
+  <script src="js/student-profile.js"></script>
+</body>
+</html>

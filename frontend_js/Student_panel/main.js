@@ -94,6 +94,35 @@ if (applyFilters) {
   });
 }
 
+// Live filtering with debounce
+function debounce(func, delay) {
+  let timeoutId;
+  return function (...args) {
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() => {
+      func.apply(this, args);
+    }, delay);
+  };
+}
+
+const liveFilter = debounce(() => {
+  const filters = {
+    jobTitle: document.getElementById("jobTitle")?.value.trim(),
+    location: document.getElementById("location")?.value.trim(),
+    skills: document.getElementById("skills")?.value.trim(),
+    minSalary: document.getElementById("minSalary")?.value.trim(),
+    maxSalary: document.getElementById("maxSalary")?.value.trim()
+  };
+  fetchJobs(filters);
+}, 500);
+
+["jobTitle", "location", "skills", "minSalary", "maxSalary"].forEach(id => {
+  const el = document.getElementById(id);
+  if (el) {
+    el.addEventListener("input", liveFilter);
+  }
+});
+
 // Clear filters
 if (clearFilters) {
   clearFilters.addEventListener("click", () => {

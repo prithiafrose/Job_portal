@@ -11,7 +11,7 @@
   <!-- Sidebar -->
   <div class="sidebar">
     <a href="dashboard.html">Dashboard</a>
-    <a href="users.html" class="active">Users</a>
+    <a href="user.html" class="active">Users</a>
     <a href="jobs.html">Job Listings</a>
     <a href="profile.html">Profile</a>
   </div>
@@ -39,45 +39,14 @@
             <th>Actions</th>
           </tr>
         </thead>
-        <tbody>
-          <tr>
-            <td>1</td>
-            <td>Admin</td>
-            <td>admin@jobportal.com</td>
-            <td>+880123456789</td>
-            <td>Admin</td>
-            <td>
-              <button class="btn" onclick="alert('Edit user')">Edit</button>
-              <button class="btn" style="background-color:#ff4d4d" onclick="alert('Delete user')">Delete</button>
-            </td>
-          </tr>
-          <tr>
-            <td>2</td>
-            <td>JohnDoe</td>
-            <td>john@example.com</td>
-            <td>+880987654321</td>
-            <td>Candidate</td>
-            <td>
-              <button class="btn" onclick="alert('Edit user')">Edit</button>
-              <button class="btn" style="background-color:#ff4d4d" onclick="alert('Delete user')">Delete</button>
-            </td>
-          </tr>
-          <tr>
-            <td>3</td>
-            <td>JaneSmith</td>
-            <td>jane@example.com</td>
-            <td>+880112233445</td>
-            <td>Employer</td>
-            <td>
-              <button class="btn" onclick="alert('Edit user')">Edit</button>
-              <button class="btn" style="background-color:#ff4d4d" onclick="alert('Delete user')">Delete</button>
-            </td>
-          </tr>
+        <tbody id="users-table-body">
+          <!-- Users will be populated here -->
         </tbody>
       </table>
     </div>
   </div>
 
+  <script src="admin-users.js"></script>
 </body>
 </html>
 

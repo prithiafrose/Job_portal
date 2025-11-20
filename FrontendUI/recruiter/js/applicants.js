@@ -27,6 +27,28 @@ async function loadApplicants() {
     
     allApplicants = await response.json();
     populateJobFilter();
+    
+    // Check for jobId in URL parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    const jobId = urlParams.get("jobId");
+    
+    if (jobId) {
+      const jobFilter = document.getElementById("jobFilter");
+      // Check if this job exists in our filter options (meaning it has applicants)
+      const optionExists = [...jobFilter.options].some(opt => opt.value == jobId);
+      
+      if (optionExists) {
+        jobFilter.value = jobId;
+      } else {
+        // If we have a jobId but no applicants for it, the filter won't have this option.
+        // In this case, we should show no results instead of all results.
+        // We can create a temporary valid option or just force empty display.
+        // Let's force empty display by passing a dummy filter matching nothing
+        displayApplicants([]);
+        return;
+      }
+    }
+
     filterAndDisplayApplicants();
   } catch (error) {
     console.error('Error loading applicants:', error);
@@ -37,25 +59,35 @@ async function loadApplicants() {
 // Populate job filter dropdown
 function populateJobFilter() {
   const jobFilter = document.getElementById("jobFilter");
-  const jobs = [...new Set(allApplicants.map(app => app.job))];
+  // Clear existing options except the first one
+  while (jobFilter.options.length > 1) {
+    jobFilter.remove(1);
+  }
   
-  jobs.forEach(job => {
+  const jobsMap = new Map();
+  allApplicants.forEach(app => {
+    if (app.job_id && !jobsMap.has(app.job_id)) {
+      jobsMap.set(app.job_id, app.job);
+    }
+  });
+  
+  jobsMap.forEach((title, id) => {
     const option = document.createElement('option');
-    option.value = job;
-    option.textContent = job;
+    option.value = id;
+    option.textContent = title;
     jobFilter.appendChild(option);
   });
 }
 
 // Filter and display applicants
 function filterAndDisplayApplicants() {
-  const jobFilter = document.getElementById("jobFilter").value;
+  const jobFilterId = document.getElementById("jobFilter").value;
   const statusFilter = document.getElementById("statusFilter").value;
   
   let filtered = allApplicants;
   
-  if (jobFilter) {
-    filtered = filtered.filter(app => app.job === jobFilter);
+  if (jobFilterId) {
+    filtered = filtered.filter(app => app.job_id == jobFilterId);
   }
   
   if (statusFilter) {

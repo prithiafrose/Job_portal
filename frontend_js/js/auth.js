@@ -5,7 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
   // ==================== Handle Redirect URL ====================
   const urlParams = new URLSearchParams(window.location.search);
   const redirectUrl = urlParams.get("redirect");
-  
+
   if (redirectUrl) {
     // Store redirect URL for after login/register
     localStorage.setItem("redirectAfterLogin", decodeURIComponent(redirectUrl));
@@ -62,6 +62,7 @@ document.addEventListener("DOMContentLoaded", () => {
         // Save token & user info
         localStorage.setItem("token", data.token);
         localStorage.setItem("user", JSON.stringify(data.user));
+        localStorage.setItem("role", data.user.role);
 
         error.style.color = "green";
         error.textContent = "Login successful! Redirecting...";
@@ -87,7 +88,7 @@ document.addEventListener("DOMContentLoaded", () => {
           if (userRole === 'admin') {
             window.location.href = "/FrontendUI/admin/dashboard.html";
           } else if (userRole === 'student') {
-            window.location.href = "/frontend_js/Student_panel/dashboard.html";
+            window.location.href = "/FrontendUI/student/dashboard.html";
           } else if (userRole === 'recruiter') {
             window.location.href = "/FrontendUI/recruiter/dashboard.html";
           } else {
@@ -97,7 +98,7 @@ document.addEventListener("DOMContentLoaded", () => {
       } catch (err) {
         loading.textContent = "";
         error.style.color = "red";
-        error.textContent = err.message;
+        error.textContent = err.message === "Failed to fetch" ? "Unable to connect to server. Is the backend running on port 5001?" : err.message;
       }
     });
   }
@@ -205,7 +206,7 @@ const userRole = data.user.role;
           if (userRole === 'admin') {
             window.location.href = "/FrontendUI/admin/dashboard.html";
           } else if (userRole === 'student') {
-            window.location.href = "/frontend_js/Student_panel/dashboard.html";
+            window.location.href = "/FrontendUI/student/dashboard.html";
           } else if (userRole === 'recruiter') {
             window.location.href = "/FrontendUI/recruiter/dashboard.html";
           } else {
@@ -215,7 +216,7 @@ const userRole = data.user.role;
       } catch (err) {
         loading.textContent = "";
         error.style.color = "red";
-        error.textContent = err.message;
+        error.textContent = err.message === "Failed to fetch" ? "Unable to connect to server. Is the backend running on port 5001?" : err.message;
       }
     });
   }
@@ -296,4 +297,3 @@ const userRole = data.user.role;
     });
   }
 });
-

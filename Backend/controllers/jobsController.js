@@ -36,12 +36,12 @@ const createJob = async (req, res) => {
 
 const listJobs = async (req, res) => {
   try {
-    const { q, page = 1, limit = 10, type, location } = req.query;
+    const { q, page = 1, limit = 10, type, location, minSalary, maxSalary, skills } = req.query;
     const { jobs, total } = await Job.searchJobs({
       query: q,
       page: Number(page),
       limit: Number(limit),
-      filters: { type, location }
+      filters: { type, location, minSalary, maxSalary, skills }
     });
     res.json({ jobs, total, page: Number(page), limit: Number(limit) });
   } catch (err) {

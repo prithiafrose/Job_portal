@@ -73,7 +73,7 @@ const register = async (req, res) => {
 
 const login = async (req, res) => {
   try {
-    const { email, password, redirect } = req.body;
+    const { email, password, role, redirect } = req.body;
     if (!email || !password) return res.status(400).json({ error: "Email and password required" });
 
     const user = await User.findOne({ where: { email } });
@@ -81,6 +81,11 @@ const login = async (req, res) => {
 
     const valid = await bcrypt.compare(password, user.password);
     if (!valid) return res.status(401).json({ error: "Invalid credentials" });
+
+    // Check if the selected role matches the user's actual role
+    if (role && user.role !== role) {
+      return res.status(401).json({ error: `Access denied. Please log in as a ${user.role}.` });
+    }
 
     const token = jwt.sign({ id: user.id, email: user.email, role: user.role }, jwtSecret, { expiresIn: tokenExpiry });
 
@@ -219,8 +224,34 @@ const resetPassword = async (req, res) => {
 
   } catch (err) {
        console.error(err);
-      res.status(500).json({ error: "Server error" });
+    res.status(500).json({ error: "Server error" });
   }
 };
 
-module.exports = { register, login, me, logout, checkEmailExistence, forgotPassword, resetPassword };
+const updateProfile = async (req, res) => {
+  try {
+    const userId = req.user?.id;
+    const { username, email, mobile, password } = req.body;
+    
+    const user = await User.findByPk(userId);
+    if (!user) return res.status(404).json({ error: "User not found" });
+
+    if (username) user.username = username;
+    if (email) user.email = email;
+    if (mobile) user.mobile = mobile;
+    
+    if (password) {
+      const passwordHash = await bcrypt.hash(password, 10);
+      user.password = passwordHash;
+    }
+
+    await user.save();
+
+    res.json({ message: "Profile updated successfully", user: { id: user.id, username: user.username, email: user.email, mobile: user.mobile, role: user.role } });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Server error" });
+  }
+};
+
+module.exports = { register, login, me, logout, checkEmailExistence, forgotPassword, resetPassword, updateProfile };
