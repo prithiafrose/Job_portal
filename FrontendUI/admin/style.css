@@ -163,6 +163,75 @@ table th {
 table tr:hover {
   background-color: #0d1b2a;
 }
+ .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      padding: 15px 25px;
+      background: rgba(0,0,0,0.25);
+      backdrop-filter: blur(6px);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: white;
+      z-index: 1000;
+    }
+
+   /* Navbar */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding: 15px 25px;
+  background: rgba(0,0,0,0.25);
+  backdrop-filter: blur(6px);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: white;
+  z-index: 1000;
+}
+
+/* Logo */
+.navbar .logo {
+  font-size: 20px;
+  font-weight: bold;
+  letter-spacing: 1px;
+}
+
+/* Logout button */
+.logout-btn {
+  padding: 8px 15px;
+  background: #ff4d4d;
+  border: none;
+  border-radius: 6px;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
+}
+.sidebar .logout {
+  color: #ff4d4d;
+  font-weight: bold;
+}
+
+.sidebar .logout:hover {
+  color: #ff1a1a;
+}
+
+
+.logout-btn:hover {
+  background: #ff1a1a;
+  transform: translateY(-2px);
+}
+
+/* Add spacing because navbar is fixed */
+.job-details-container {
+  margin-top: 100px;
+}
+
 
 /* ====================== Responsive ====================== */
 @media screen and (max-width: 768px) {

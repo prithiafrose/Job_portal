@@ -18,6 +18,11 @@ async function loadProfile() {
     profileForm[0].value = user.username || "";
     profileForm[1].value = user.email || "";
     profileForm[2].value = user.mobile || "";
+    // Fill input fields
+
+document.getElementById("fullNameInput").value = user.full_name || "";
+document.getElementById("skillsInput").value = user.skills || "";
+
 
   } catch (err) {
     console.error(err);
@@ -52,7 +57,7 @@ profileForm.addEventListener("submit", async (e) => {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`
       },
-      body: JSON.stringify({ username, email, mobile })
+      body: JSON.stringify({ username, email, mobile,full_name: fullName, skills })
     });
     let data = await res.json();
     if (!res.ok) throw new Error(data.error || "Failed to update profile");

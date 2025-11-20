@@ -45,7 +45,7 @@ app.use("/uploads", express.static(uploadsDir));
 const PORT = process.env.PORT || 5001;
 (async () => {
   try {
-    await sequelize.sync(); // ✅ Sync database without altering existing tables
+    await sequelize.sync({ alter: true }); // ✅ Sync database without altering existing tables
     console.log("✅ Database synced successfully.");
     app.listen(PORT, () => console.log(`Server running at http://localhost:${PORT}`));
   } catch (err) {

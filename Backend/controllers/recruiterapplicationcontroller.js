@@ -34,13 +34,12 @@ export const apply = async (req, res) => {
     const applicationData = {
       job_id: jobId,
       user_id,
-      full_name: fullName,
       email,
       phone,
       education,
       experience,
       skills,
-      resume_path: resumePath,
+resume_path: resumePath,
       payment_method: paymentMethod || 'unknown',
       payment_status: paymentStatus || 'pending',
       payment_amount: 100.00

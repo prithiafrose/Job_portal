@@ -19,9 +19,15 @@ export const createJob = async (req, res) => {
 
 export const listJobs = async (req, res) => {
   try {
-    const { q, page = 1, limit = 10, location } = req.query;
-    const { jobs } = await Job.searchJobs({ query: q, page: Number(page), limit: Number(limit), filters: { location } });
-
+     const { title = '', location = '' } = req.query;
+      const { jobs } = await Job.searchJobs({
+      filters: {
+        title: title.trim(),     // only filter by title
+        location: location.trim() // only filter by location
+      },
+      page: 1,
+      limit: 100                // adjust limit as needed
+    });
     // Return array directly for frontend
     res.json(jobs.map(job => ({
       id: job.id,

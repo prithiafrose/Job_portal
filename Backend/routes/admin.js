@@ -8,6 +8,7 @@ import {
   getRecentRegistrations
 } from "../controllers/adminController.js";
 import Application from "../models/Application.js";
+import User from "../models/User.js";
 
 const router = express.Router();
 
@@ -15,18 +16,48 @@ const router = express.Router();
 router.use(authMiddleware);
 router.use(adminMiddleware);
 
-// Dashboard stats
+// ======================= DASHBOARD STATS =======================
 router.get("/users/stats", getUserStats);
 router.get("/jobs/stats", getJobStats);
 router.get("/jobs/pending", getPendingApprovals);
 router.get("/users/recent", getRecentRegistrations);
 
-// Get applicants for a specific job
+// ======================= GET ALL USERS (ADMIN PANEL) =======================
+router.get("/users", async (req, res) => {
+  try {
+    const users = await User.findAll({
+      attributes: ["id", "username", "email", "mobile", "role"]
+    });
+    res.json(users);
+  } catch (err) {
+    console.error("Error fetching users:", err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+// ======================= DELETE USER =======================
+router.delete("/users/:id", async (req, res) => {
+  try {
+    const user = await User.findByPk(req.params.id);
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    await user.destroy();
+    res.json({ success: true });
+  } catch (err) {
+    console.error("Error deleting user:", err);
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+
+// ======================= JOB APPLICANTS =======================
 router.get("/job-applicants/:jobId", async (req, res) => {
   try {
     const apps = await Application.getApplicationsForJob(req.params.jobId);
     
-    // Format for frontend
     const formattedApps = apps.map(app => ({
       id: app.id,
       name: app.full_name || app.User?.username || 'N/A',
@@ -46,7 +77,7 @@ router.get("/job-applicants/:jobId", async (req, res) => {
   }
 });
 
-// Update application status
+// ======================= UPDATE APPLICATION STATUS =======================
 router.put("/application-status/:applicationId", async (req, res) => {
   try {
     const { status } = req.body;

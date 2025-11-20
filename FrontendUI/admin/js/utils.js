@@ -1,3 +1,4 @@
+// utils.js
 const API_URL = "http://localhost:5001";
 
 function getToken() {
@@ -7,10 +8,9 @@ function getToken() {
 function checkAdminAuth() {
   const token = getToken();
   if (!token) {
-    window.location.href = "../../Auth/login.html";
+    window.location.href = "../Auth/login.html"; // Adjust path relative to your page
     return null;
   }
-  // Ideally you would decode the token to check role, but for now we rely on the backend 403
   return token;
 }
 
@@ -30,14 +30,14 @@ async function fetchWithAuth(endpoint, options = {}) {
   if (response.status === 401 || response.status === 403) {
     alert("Session expired or unauthorized. Please login again.");
     localStorage.removeItem("token");
-    window.location.href = "../../Auth/login.html";
+    window.location.href = "../Auth/login.html";
     return null;
   }
 
   return response;
 }
 
-// Export functions globally if using simple script tags
+// Export globally
 window.API_URL = API_URL;
 window.getToken = getToken;
 window.checkAdminAuth = checkAdminAuth;

@@ -13,6 +13,7 @@
     <a href="job-list.html">Jobs</a>
     <a href="applied-jobs.html">Applied Jobs</a>
     <a href="profile.html">Profile</a>
+     <button id="logout-btn" class="logout-btn">Logout</button>
   </div>
 
   <!-- Main content -->
@@ -25,11 +26,9 @@
       <div style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 10px;">
         <input type="text" id="jobTitle" placeholder="Job Title">
         <input type="text" id="location" placeholder="Location">
-        <input type="text" id="skills" placeholder="Skills">
       </div>
       <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-        <input type="number" id="minSalary" placeholder="Min Salary">
-        <input type="number" id="maxSalary" placeholder="Max Salary">
+       
         <button id="applyFilters" class="btn">Apply Filters</button>
         <button id="clearFilters" class="btn">Clear Filters</button>
       </div>
@@ -39,6 +38,6 @@
     <div id="job-list"></div>
   </div>
 
-  <script src="main.js"></script>
+  <script src="job-list.js"></script>
 </body>
 </html>

@@ -1,4 +1,3 @@
-// Full backend URL
 const API = "http://localhost:5001/api";
 
 // Get job ID from URL
@@ -15,34 +14,27 @@ const descriptionEl = document.getElementById("description");
 const actionContainer = document.querySelector(".job-details-container");
 const applyBtn = document.getElementById("applyBtn");
 
-// Fetch helper with auth
-async function fetchWithAuth(endpoint, options = {}) {
-  const token = localStorage.getItem("token");
-  const headers = { "Content-Type": "application/json", ...options.headers };
-  if (token) headers["Authorization"] = `Bearer ${token}`;
-  const res = await fetch(API + endpoint, { ...options, headers });
-  return res;
-}
-
-// Check user role
+// Helper: get user role
 function getUserRole() {
-  try {
-    const user = JSON.parse(localStorage.getItem("user") || "{}");
-    return user.role || "guest";
-  } catch {
-    return "guest";
-  }
+  const user = JSON.parse(localStorage.getItem("user") || "{}");
+  return user.role || "guest";
 }
 
 // Fetch job details
 async function fetchJobDetails() {
   try {
-    const res = await fetchWithAuth(`/jobs/${jobId}`);
+    const token = localStorage.getItem("token") || "";
+    const res = await fetch(`${API}/jobs/${jobId}`, {
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: token ? `Bearer ${token}` : undefined
+      }
+    });
     if (!res.ok) throw new Error("Failed to fetch job details");
 
     const job = await res.json();
 
-    // Fill in job details
+    // Fill in job info
     jobPosition.textContent = job.title;
     companyName.textContent = job.company;
     locationEl.textContent = job.location || "N/A";
@@ -50,22 +42,22 @@ async function fetchJobDetails() {
     skillsEl.textContent = job.skills || "N/A";
     descriptionEl.textContent = job.description || "No description";
 
-    // Show buttons
+    // Role-based buttons
     const role = getUserRole();
-    if (role === "admin" || role === "recruiter") {
-      // Admin/Recruiter: show Approve/Reject if pending
-      if (job.status === "pending") {
-        applyBtn.style.display = "none"; // hide apply button
 
+    if (role === "admin" || role === "recruiter") {
+      // Admin/Recruiter cannot apply
+      if (applyBtn) applyBtn.style.display = "none";
+
+      if (job.status === "pending") {
+        // Show Approve/Reject buttons
         const approveBtn = document.createElement("button");
         approveBtn.textContent = "Approve";
-        approveBtn.style.backgroundColor = "#28a745";
-        approveBtn.style.marginRight = "10px";
         approveBtn.onclick = () => updateStatus("active");
+        approveBtn.style.marginRight = "10px";
 
         const rejectBtn = document.createElement("button");
         rejectBtn.textContent = "Reject";
-        rejectBtn.style.backgroundColor = "#dc3545";
         rejectBtn.onclick = () => updateStatus("rejected");
 
         actionContainer.appendChild(approveBtn);
@@ -74,47 +66,58 @@ async function fetchJobDetails() {
         const statusMsg = document.createElement("p");
         statusMsg.innerHTML = `<strong>Status:</strong> ${job.status || "N/A"}`;
         actionContainer.appendChild(statusMsg);
-        applyBtn.style.display = "none";
       }
     } else {
-      // Normal user: show Apply button if job is active or status is undefined (default active)
-      if (!job.status || job.status === "active") {
-        applyBtn.style.display = "inline-block";
-        applyBtn.onclick = () => applyForJob(job.id);
-      } else {
-        applyBtn.style.display = "none";
+      // Normal users can apply if active
+      if (applyBtn) {
+        if (!job.status || job.status === "active") {
+          applyBtn.style.display = "inline-block";
+          applyBtn.onclick = () => applyForJob(job.id);
+        } else {
+          applyBtn.style.display = "none";
+        }
       }
     }
 
   } catch (err) {
-    console.error("Error:", err);
-    actionContainer.innerHTML = "<p>Error loading job details.</p>";
+    console.error("Error loading job:", err);
+    if (actionContainer) actionContainer.innerHTML = "<p>Error loading job details.</p>";
+    if (applyBtn) applyBtn.style.display = "none";
   }
 }
 
-// Apply for job
+// Apply function
 function applyForJob(jobId) {
+  const role = getUserRole();
+  if (role === "admin" || role === "recruiter") {
+    alert("Admins and recruiters cannot apply for jobs.");
+    return;
+  }
+
   const token = localStorage.getItem("token");
   const applyUrl = `/FrontendUI/apply.html?jobId=${jobId}`;
-  
+
   if (!token) {
-    // Redirect to login with return URL
     const returnUrl = encodeURIComponent(window.location.origin + applyUrl);
     window.location.href = `/FrontendUI/Auth/login.html?redirect=${returnUrl}`;
     return;
   }
 
-  // Redirect to apply page
   window.location.href = applyUrl;
 }
 
-// Update job status (admin/recruiter)
+// Update job status
 async function updateStatus(status) {
   if (!confirm(`Mark this job as ${status}?`)) return;
+  const token = localStorage.getItem("token") || "";
 
   try {
-    const res = await fetchWithAuth(`/jobs/${jobId}`, {
+    const res = await fetch(`${API}/jobs/${jobId}`, {
       method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`
+      },
       body: JSON.stringify({ status })
     });
 
@@ -130,5 +133,19 @@ async function updateStatus(status) {
 }
 
 // Initialize
-document.addEventListener("DOMContentLoaded", fetchJobDetails);
+document.addEventListener("DOMContentLoaded", () => {
+  // Redirect recruiters/admins if they are on apply page
+  const role = getUserRole();
+  if (window.location.pathname.includes("apply.html") && (role === "admin" || role === "recruiter")) {
+    alert("You cannot access this page");
+    window.location.href = "/FrontendUI/index.html";
+    return;
+  }
+
+  if (window.location.pathname.includes("job-details.html")) {
+    fetchJobDetails();
+  }
+});
+
+
 

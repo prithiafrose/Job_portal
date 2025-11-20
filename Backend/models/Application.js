@@ -8,7 +8,6 @@ const Application = sequelize.define(
   {
     job_id: { type: DataTypes.INTEGER, allowNull: false },
     user_id: { type: DataTypes.INTEGER, allowNull: false },
-    full_name: DataTypes.STRING,
     email: DataTypes.STRING,
     phone: DataTypes.STRING,
     education: DataTypes.STRING,
@@ -16,6 +15,7 @@ const Application = sequelize.define(
     skills: DataTypes.TEXT,
     cover_letter: DataTypes.TEXT,
     resume_path: DataTypes.STRING,
+    company: DataTypes.STRING,
     payment_method: DataTypes.STRING,
     payment_status: { 
       type: DataTypes.ENUM('pending', 'completed', 'failed'), 
